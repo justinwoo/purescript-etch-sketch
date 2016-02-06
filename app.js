@@ -23129,8 +23129,8 @@ var Nil = function () {
 }();
 var moveCursor = function moveCursor(direction) {
     return function (state) {
-        var points = Data_Array.cons(state.cursor)(state.points);
-        var cursor = function () {
+        var points$prime = Data_Array.cons(state.cursor)(state.points);
+        var cursor$prime = function () {
             if (direction instanceof Nil) {
                 return state.cursor;
             };
@@ -23160,18 +23160,20 @@ var moveCursor = function moveCursor(direction) {
             };
             throw new Error("Failed pattern match at Main line 49, column 7 - line 56, column 3: " + [direction.constructor.name]);
         }();
-        var $5 = cursor.x < 0 || (state.increment * cursor.x | 0) > state.width - state.increment || cursor.y < 0 || (state.increment * cursor.y | 0) > state.height - state.increment;
+        var $5 = cursor$prime.x < 0 || (state.increment * cursor$prime.x | 0) > state.width - state.increment || cursor$prime.y < 0 || (state.increment * cursor$prime.y | 0) > state.height - state.increment;
         if ($5) {
             return state;
         };
         if (!$5) {
-            return {
-                cursor: cursor,
-                points: points,
-                width: state.width,
-                height: state.height,
-                increment: state.increment
+            var $6 = {};
+            for (var $7 in state) {
+                if (state.hasOwnProperty($7)) {
+                    $6[$7] = state[$7];
+                };
             };
+            $6.cursor = cursor$prime;
+            $6.points = points$prime;
+            return $6;
         };
         throw new Error("Failed pattern match at Main line 44, column 1 - line 45, column 1: " + [$5.constructor.name]);
     };
@@ -23204,7 +23206,7 @@ var main = function __do() {
         if (directionInput instanceof Data_Maybe.Nothing) {
             return Signal.constant($foreign.jsRenderError);
         };
-        throw new Error("Failed pattern match at Main line 86, column 7 - line 91, column 3: " + [directionInput.constructor.name]);
+        throw new Error("Failed pattern match at Main line 84, column 7 - line 89, column 3: " + [directionInput.constructor.name]);
     }();
     return Signal.runSignal(render)();
 };

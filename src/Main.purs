@@ -45,23 +45,21 @@ moveCursor :: Direction -> State -> State
 moveCursor direction state = do
   let x = state.cursor.x
   let y = state.cursor.y
-  let points = Array.cons state.cursor state.points
-  let cursor =
+  let points' = Array.cons state.cursor state.points
+  let cursor' =
     case direction of
         Nil -> state.cursor
         Up -> {x: x, y: y - 1}
         Down -> {x: x, y: y + 1}
         Left -> {x: x - 1, y: y}
         Right -> {x: x + 1, y: y}
-  if (cursor.x < 0 || (state.increment * cursor.x) > (state.width - state.increment) ||
-      cursor.y < 0 || (state.increment * cursor.y) > (state.height - state.increment))
+  if (cursor'.x < 0 || (state.increment * cursor'.x) > (state.width - state.increment) ||
+      cursor'.y < 0 || (state.increment * cursor'.y) > (state.height - state.increment))
       then state
-      else { cursor: cursor
-           , points: points
-           , width: state.width
-           , height: state.height
-           , increment: state.increment
-           }
+      else (state
+            { cursor = cursor'
+            , points = points'
+            })
 
 update :: Direction -> State -> State
 update direction state =
