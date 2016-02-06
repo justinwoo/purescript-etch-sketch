@@ -1,0 +1,24 @@
+{
+  "name": "purescript-playground",
+  "version": "1.0.0",
+  "moduleType": [
+    "node"
+  ],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "output"
+  ],
+  "dependencies": {
+    "purescript-console": "^0.1.0",
+    "purescript-math": "^0.2.0",
+    "bower": "*",
+    "install": "^1.0.4",
+    "purescript-sets": "^0.5.7",
+    "purescript-generics": "^0.7.2",
+    "purescript-arrays": "^0.4.4",
+    "purescript-dom": "^0.2.15",
+    "purescript-signal": "^5.0.0"
+  }
+}
