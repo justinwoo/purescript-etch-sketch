@@ -23122,11 +23122,6 @@ var Right = function () {
     Right.value = new Right();
     return Right;
 }();
-var Nil = function () {
-    function Nil() {};
-    Nil.value = new Nil();
-    return Nil;
-}();
 var Coords = function () {
     function Coords(value0, value1) {
         this.value0 = value0;
@@ -23165,16 +23160,13 @@ var insertPoint = function insertPoint(point) {
         if ($15 instanceof Data_Maybe.Nothing) {
             return Data_Array.cons(point)(points);
         };
-        throw new Error("Failed pattern match at Main line 46, column 1 - line 47, column 1: " + [$15.constructor.name]);
+        throw new Error("Failed pattern match at Main line 45, column 1 - line 46, column 1: " + [$15.constructor.name]);
     };
 };
 var moveCursor = function moveCursor(direction) {
     return function (state) {
         var points$prime = insertPoint(state.cursor)(state.points);
         var cursor$prime = function () {
-            if (direction instanceof Nil) {
-                return state.cursor;
-            };
             if (direction instanceof Up) {
                 return new Coords(state.cursor.value0, state.cursor.value1 - 1);
             };
@@ -23187,7 +23179,7 @@ var moveCursor = function moveCursor(direction) {
             if (direction instanceof Right) {
                 return new Coords(state.cursor.value0 + 1 | 0, state.cursor.value1);
             };
-            throw new Error("Failed pattern match at Main line 57, column 11 - line 64, column 7: " + [direction.constructor.name]);
+            throw new Error("Failed pattern match at Main line 56, column 11 - line 62, column 7: " + [direction.constructor.name]);
         }();
         var $19 = isValidPoint(state)(cursor$prime);
         if ($19) {
@@ -23204,7 +23196,7 @@ var moveCursor = function moveCursor(direction) {
             $20.points = points$prime;
             return $20;
         };
-        throw new Error("Failed pattern match at Main line 52, column 1 - line 53, column 1: " + [$19.constructor.name]);
+        throw new Error("Failed pattern match at Main line 51, column 1 - line 52, column 1: " + [$19.constructor.name]);
     };
 };
 var update = function update(direction) {
@@ -23225,7 +23217,7 @@ var main = function __do() {
         if (directionInput instanceof Data_Maybe.Nothing) {
             return Signal.constant($foreign.jsRenderError);
         };
-        throw new Error("Failed pattern match at Main line 91, column 7 - line 96, column 3: " + [directionInput.constructor.name]);
+        throw new Error("Failed pattern match at Main line 89, column 7 - line 94, column 3: " + [directionInput.constructor.name]);
     }();
     return Signal.runSignal(render)();
 };
@@ -23235,7 +23227,6 @@ module.exports = {
     Down: Down,
     Left: Left,
     Right: Right,
-    Nil: Nil,
     main: main,
     update: update,
     moveCursor: moveCursor,

@@ -13,7 +13,6 @@ data Direction
   | Down
   | Left
   | Right
-  | Nil
 
 data Coords = Coords Int Int
 instance eqCoords :: Eq Coords where
@@ -56,7 +55,6 @@ moveCursor direction state = do
       let points' = insertPoint state.cursor state.points
       let cursor' =
         case direction of
-            Nil -> state.cursor
             Up -> Coords x (y - 1)
             Down -> Coords x (y + 1)
             Left -> Coords (x - 1) y
