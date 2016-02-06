@@ -10,8 +10,8 @@ const Block = React.createClass({
     return (
       <rect
         key={this.props.key}
-        x={increment * this.props.coords.x}
-        y={increment * this.props.coords.y}
+        x={increment * this.props.coords.value0}
+        y={increment * this.props.coords.value1}
         width={increment}
         height={increment}
       />

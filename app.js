@@ -23004,8 +23004,8 @@ var Block = _react2.default.createClass({
 
     return _react2.default.createElement('rect', {
       key: this.props.key,
-      x: increment * this.props.coords.x,
-      y: increment * this.props.coords.y,
+      x: increment * this.props.coords.value0,
+      y: increment * this.props.coords.value1,
       width: increment,
       height: increment
     });
@@ -23127,71 +23127,90 @@ var Nil = function () {
     Nil.value = new Nil();
     return Nil;
 }();
+var Coords = function () {
+    function Coords(value0, value1) {
+        this.value0 = value0;
+        this.value1 = value1;
+    };
+    Coords.create = function (value0) {
+        return function (value1) {
+            return new Coords(value0, value1);
+        };
+    };
+    return Coords;
+}();
+var isValidPoint = function isValidPoint(state) {
+    return function (coords) {
+        return coords.value0 < 0 || (state.increment * coords.value0 | 0) > state.width - state.increment || coords.value1 < 0 || (state.increment * coords.value1 | 0) > state.height - state.increment;
+    };
+};
+var initState = {
+    cursor: new Coords(0, 0),
+    points: [],
+    width: 800,
+    height: 600,
+    increment: 10
+};
+var eqCoords = new Prelude.Eq(function (v) {
+    return function (v1) {
+        return v.value0 === v1.value0 && v.value1 === v1.value1;
+    };
+});
+var insertPoint = function insertPoint(point) {
+    return function (points) {
+        var $15 = Data_Array.elemIndex(eqCoords)(point)(points);
+        if ($15 instanceof Data_Maybe.Just) {
+            return points;
+        };
+        if ($15 instanceof Data_Maybe.Nothing) {
+            return Data_Array.cons(point)(points);
+        };
+        throw new Error("Failed pattern match at Main line 46, column 1 - line 47, column 1: " + [$15.constructor.name]);
+    };
+};
 var moveCursor = function moveCursor(direction) {
     return function (state) {
-        var points$prime = Data_Array.cons(state.cursor)(state.points);
+        var points$prime = insertPoint(state.cursor)(state.points);
         var cursor$prime = function () {
             if (direction instanceof Nil) {
                 return state.cursor;
             };
             if (direction instanceof Up) {
-                return {
-                    x: state.cursor.x,
-                    y: state.cursor.y - 1
-                };
+                return new Coords(state.cursor.value0, state.cursor.value1 - 1);
             };
             if (direction instanceof Down) {
-                return {
-                    x: state.cursor.x,
-                    y: state.cursor.y + 1 | 0
-                };
+                return new Coords(state.cursor.value0, state.cursor.value1 + 1 | 0);
             };
             if (direction instanceof Left) {
-                return {
-                    x: state.cursor.x - 1,
-                    y: state.cursor.y
-                };
+                return new Coords(state.cursor.value0 - 1, state.cursor.value1);
             };
             if (direction instanceof Right) {
-                return {
-                    x: state.cursor.x + 1 | 0,
-                    y: state.cursor.y
-                };
+                return new Coords(state.cursor.value0 + 1 | 0, state.cursor.value1);
             };
-            throw new Error("Failed pattern match at Main line 49, column 7 - line 56, column 3: " + [direction.constructor.name]);
+            throw new Error("Failed pattern match at Main line 57, column 11 - line 64, column 7: " + [direction.constructor.name]);
         }();
-        var $5 = cursor$prime.x < 0 || (state.increment * cursor$prime.x | 0) > state.width - state.increment || cursor$prime.y < 0 || (state.increment * cursor$prime.y | 0) > state.height - state.increment;
-        if ($5) {
+        var $19 = isValidPoint(state)(cursor$prime);
+        if ($19) {
             return state;
         };
-        if (!$5) {
-            var $6 = {};
-            for (var $7 in state) {
-                if (state.hasOwnProperty($7)) {
-                    $6[$7] = state[$7];
+        if (!$19) {
+            var $20 = {};
+            for (var $21 in state) {
+                if (state.hasOwnProperty($21)) {
+                    $20[$21] = state[$21];
                 };
             };
-            $6.cursor = cursor$prime;
-            $6.points = points$prime;
-            return $6;
+            $20.cursor = cursor$prime;
+            $20.points = points$prime;
+            return $20;
         };
-        throw new Error("Failed pattern match at Main line 44, column 1 - line 45, column 1: " + [$5.constructor.name]);
+        throw new Error("Failed pattern match at Main line 52, column 1 - line 53, column 1: " + [$19.constructor.name]);
     };
 };
 var update = function update(direction) {
     return function (state) {
         return moveCursor(direction)(state);
     };
-};
-var initState = {
-    cursor: {
-        x: 0,
-        y: 0
-    },
-    points: [],
-    width: 800,
-    height: 600,
-    increment: 10
 };
 var main = function __do() {
     var v = Signal_DOM.keyPressed(38)();
@@ -23206,11 +23225,12 @@ var main = function __do() {
         if (directionInput instanceof Data_Maybe.Nothing) {
             return Signal.constant($foreign.jsRenderError);
         };
-        throw new Error("Failed pattern match at Main line 84, column 7 - line 89, column 3: " + [directionInput.constructor.name]);
+        throw new Error("Failed pattern match at Main line 91, column 7 - line 96, column 3: " + [directionInput.constructor.name]);
     }();
     return Signal.runSignal(render)();
 };
 module.exports = {
+    Coords: Coords,
     Up: Up,
     Down: Down,
     Left: Left,
@@ -23219,7 +23239,10 @@ module.exports = {
     main: main,
     update: update,
     moveCursor: moveCursor,
+    insertPoint: insertPoint,
+    isValidPoint: isValidPoint,
     initState: initState,
+    eqCoords: eqCoords,
     jsRenderError: $foreign.jsRenderError,
     jsRender: $foreign.jsRender
 };
