@@ -23217,7 +23217,7 @@ var main = function __do() {
         if (directionInput instanceof Data_Maybe.Nothing) {
             return Signal.constant($foreign.jsRenderError);
         };
-        throw new Error("Failed pattern match at Main line 89, column 7 - line 94, column 3: " + [directionInput.constructor.name]);
+        throw new Error("Failed pattern match at Main line 86, column 7 - line 91, column 3: " + [directionInput.constructor.name]);
     }();
     return Signal.runSignal(render)();
 };

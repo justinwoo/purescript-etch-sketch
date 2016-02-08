@@ -1,6 +1,6 @@
 module Main where
 
-import Prelude (Unit, bind, (-), (*), (>), (||), (<), (+), (==), (&&), class Eq)
+import Prelude (Unit, bind, ($), (-), (*), (>), (||), (<), (+), (==), (&&), class Eq)
 import Control.Monad.Eff (Eff)
 import Data.Array as Array
 import DOM (DOM)
@@ -61,10 +61,7 @@ moveCursor direction state = do
             Right -> Coords (x + 1) y
       if isValidPoint state cursor'
           then state
-          else (state
-                { cursor = cursor'
-                , points = points'
-                })
+          else state {cursor = cursor', points = points'}
 
 update :: Direction -> State -> State
 update direction state =
@@ -80,15 +77,15 @@ main = do
   leftInput <- keyPressed 37
   rightInput <- keyPressed 39
   let directionInput =
-      (mergeMany
-        [ sampleOn upInput (constant Up)
-        , sampleOn downInput (constant Down)
-        , sampleOn leftInput (constant Left)
-        , sampleOn rightInput (constant Right)
-        ])
+      mergeMany
+        [ sampleOn upInput $ constant Up
+        , sampleOn downInput $ constant Down
+        , sampleOn leftInput $ constant Left
+        , sampleOn rightInput $ constant Right
+        ]
   let render =
     case directionInput of
         Just signal -> do
-          jsRender <~ (foldp update initState signal)
+          jsRender <~ foldp update initState signal
         Nothing -> constant jsRenderError
   runSignal render
