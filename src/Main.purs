@@ -49,7 +49,7 @@ insertPoint point points =
     Nothing -> Array.cons point points
 
 moveCursor :: Direction -> State -> State
-moveCursor direction state = do
+moveCursor direction state =
   case state.cursor of
     Coords x y -> do
       let points' = insertPoint state.cursor state.points
@@ -83,9 +83,6 @@ main = do
         , sampleOn leftInput $ constant Left
         , sampleOn rightInput $ constant Right
         ]
-  let render =
-    case directionInput of
-        Just signal -> do
-          jsRender <~ foldp update initState signal
-        Nothing -> constant jsRenderError
-  runSignal render
+  case directionInput of
+    Just signal -> runSignal $ jsRender <~ foldp update initState signal
+    Nothing -> jsRenderError

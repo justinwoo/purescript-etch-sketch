@@ -23210,16 +23210,13 @@ var main = function __do() {
     var v2 = Signal_DOM.keyPressed(37)();
     var v3 = Signal_DOM.keyPressed(39)();
     var directionInput = Signal.mergeMany(Prelude.functorArray)(Data_Foldable.foldableArray)([Signal.sampleOn(v)(Signal.constant(Up.value)), Signal.sampleOn(v1)(Signal.constant(Down.value)), Signal.sampleOn(v2)(Signal.constant(Left.value)), Signal.sampleOn(v3)(Signal.constant(Right.value))]);
-    var render = function () {
-        if (directionInput instanceof Data_Maybe.Just) {
-            return Signal["<~"](Signal.functorSignal)($foreign.jsRender)(Signal.foldp(update)(initState)(directionInput.value0));
-        };
-        if (directionInput instanceof Data_Maybe.Nothing) {
-            return Signal.constant($foreign.jsRenderError);
-        };
-        throw new Error("Failed pattern match at Main line 86, column 7 - line 91, column 3: " + [directionInput.constructor.name]);
-    }();
-    return Signal.runSignal(render)();
+    if (directionInput instanceof Data_Maybe.Just) {
+        return Signal.runSignal(Signal["<~"](Signal.functorSignal)($foreign.jsRender)(Signal.foldp(update)(initState)(directionInput.value0)))();
+    };
+    if (directionInput instanceof Data_Maybe.Nothing) {
+        return $foreign.jsRenderError();
+    };
+    throw new Error("Failed pattern match at Main line 73, column 1 - line 74, column 1: " + [directionInput.constructor.name]);
 };
 module.exports = {
     Coords: Coords,
