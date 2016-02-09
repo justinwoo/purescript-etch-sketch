@@ -7,10 +7,6 @@ import Json.Encode as Json
 import Svg
 import Svg.Attributes as SvgA
 
-type Action
-  = MoveCursor Direction
-  | ScreenWipe
-
 type Direction
   = Up
   | Down
@@ -66,8 +62,8 @@ moveCursor direction state =
           then state
           else { state | cursor = cursor', points = points' }
 
-wipeScreen : State -> State
-wipeScreen state =
+wipeScreen : a -> State -> State
+wipeScreen _ state =
   { state | points = [] }
 
 point : Int -> String -> Coords -> Html
@@ -103,12 +99,6 @@ view state =
           ]
       ]
 
-update : Action -> State -> State
-update action state =
-  case action of
-    MoveCursor direction -> moveCursor direction state
-    ScreenWipe -> wipeScreen state
-
 getKeyDirection : KeyCode -> Maybe Direction
 getKeyDirection keyCode =
   case keyCode of
@@ -116,10 +106,6 @@ getKeyDirection keyCode =
     40 -> Just Down
     37 -> Just Left
     39 -> Just Right
-    119 -> Just Up
-    115 -> Just Down
-    97 -> Just Left
-    100 -> Just Right
     _ -> Nothing
 
 keyDirections : Signal Direction
@@ -129,13 +115,13 @@ keyDirections =
 screenWipes : Signal.Mailbox Bool
 screenWipes = Signal.mailbox True
 
-actions : Signal Action
-actions =
+projects : Signal (State -> State)
+projects =
   Signal.mergeMany
-    [ Signal.map (\x -> MoveCursor x) keyDirections
-    , Signal.map (\_ -> ScreenWipe) screenWipes.signal
+    [ Signal.map moveCursor keyDirections
+    , Signal.map wipeScreen screenWipes.signal
     ]
 
 main : Signal Html
 main =
-  Signal.map view <| Signal.foldp update initState actions
+  Signal.map view <| Signal.foldp (<|) initState projects

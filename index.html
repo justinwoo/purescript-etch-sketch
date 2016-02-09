@@ -12374,24 +12374,24 @@ Elm.Main.make = function (_elm) {
                       ,$Svg$Attributes.height($Basics.toString(state.height))]),
               A2($List._op["::"],cursor,points))]))]));
    };
-   var wipeScreen = function (state) {
+   var wipeScreen = F2(function (_p4,state) {
       return _U.update(state,{points: _U.list([])});
-   };
+   });
    var insertPoint = F2(function (point,points) {
-      var _p4 = A2($List.member,point,points);
-      if (_p4 === true) {
+      var _p5 = A2($List.member,point,points);
+      if (_p5 === true) {
             return points;
          } else {
             return A2($List._op["::"],point,points);
          }
    });
    var isValidPoint = F2(function (state,coords) {
-      var _p5 = coords;
-      var _p7 = _p5._1;
-      var _p6 = _p5._0;
-      return _U.cmp(_p6,0) < 0 || (_U.cmp(state.increment * _p6,
-      state.width - state.increment) > 0 || (_U.cmp(_p7,
-      0) < 0 || _U.cmp(state.increment * _p7,
+      var _p6 = coords;
+      var _p8 = _p6._1;
+      var _p7 = _p6._0;
+      return _U.cmp(_p7,0) < 0 || (_U.cmp(state.increment * _p7,
+      state.width - state.increment) > 0 || (_U.cmp(_p8,
+      0) < 0 || _U.cmp(state.increment * _p8,
       state.height - state.increment) > 0));
    });
    var State = F5(function (a,b,c,d,e) {
@@ -12406,28 +12406,20 @@ Elm.Main.make = function (_elm) {
                    ,height: 600
                    ,increment: 10};
    var moveCursor = F2(function (direction,state) {
-      var _p8 = state.cursor;
-      var _p11 = _p8._1;
-      var _p10 = _p8._0;
+      var _p9 = state.cursor;
+      var _p12 = _p9._1;
+      var _p11 = _p9._0;
       var cursor$ = function () {
-         var _p9 = direction;
-         switch (_p9.ctor)
-         {case "Up": return A2(Coords,_p10,_p11 - 1);
-            case "Down": return A2(Coords,_p10,_p11 + 1);
-            case "Left": return A2(Coords,_p10 - 1,_p11);
-            default: return A2(Coords,_p10 + 1,_p11);}
+         var _p10 = direction;
+         switch (_p10.ctor)
+         {case "Up": return A2(Coords,_p11,_p12 - 1);
+            case "Down": return A2(Coords,_p11,_p12 + 1);
+            case "Left": return A2(Coords,_p11 - 1,_p12);
+            default: return A2(Coords,_p11 + 1,_p12);}
       }();
       var points$ = A2(insertPoint,state.cursor,state.points);
       return A2(isValidPoint,state,cursor$) ? state : _U.update(state,
       {cursor: cursor$,points: points$});
-   });
-   var update = F2(function (action,state) {
-      var _p12 = action;
-      if (_p12.ctor === "MoveCursor") {
-            return A2(moveCursor,_p12._0,state);
-         } else {
-            return wipeScreen(state);
-         }
    });
    var Right = {ctor: "Right"};
    var Left = {ctor: "Left"};
@@ -12440,36 +12432,23 @@ Elm.Main.make = function (_elm) {
          case 40: return $Maybe.Just(Down);
          case 37: return $Maybe.Just(Left);
          case 39: return $Maybe.Just(Right);
-         case 119: return $Maybe.Just(Up);
-         case 115: return $Maybe.Just(Down);
-         case 97: return $Maybe.Just(Left);
-         case 100: return $Maybe.Just(Right);
          default: return $Maybe.Nothing;}
    };
    var keyDirections = A3($Signal.filterMap,
    getKeyDirection,
    Up,
    $Keyboard.downs);
-   var ScreenWipe = {ctor: "ScreenWipe"};
-   var MoveCursor = function (a) {
-      return {ctor: "MoveCursor",_0: a};
-   };
-   var actions = $Signal.mergeMany(_U.list([A2($Signal.map,
-                                           function (x) {
-                                              return MoveCursor(x);
-                                           },
-                                           keyDirections)
-                                           ,A2($Signal.map,
-                                           function (_p14) {
-                                              return ScreenWipe;
-                                           },
-                                           screenWipes.signal)]));
+   var projects = $Signal.mergeMany(_U.list([A2($Signal.map,
+                                            moveCursor,
+                                            keyDirections)
+                                            ,A2($Signal.map,wipeScreen,screenWipes.signal)]));
    var main = A2($Signal.map,
    view,
-   A3($Signal.foldp,update,initState,actions));
+   A3($Signal.foldp,
+   F2(function (x,y) {    return x(y);}),
+   initState,
+   projects));
    return _elm.Main.values = {_op: _op
-                             ,MoveCursor: MoveCursor
-                             ,ScreenWipe: ScreenWipe
                              ,Up: Up
                              ,Down: Down
                              ,Left: Left
@@ -12483,10 +12462,9 @@ Elm.Main.make = function (_elm) {
                              ,wipeScreen: wipeScreen
                              ,point: point
                              ,view: view
-                             ,update: update
                              ,getKeyDirection: getKeyDirection
                              ,keyDirections: keyDirections
                              ,screenWipes: screenWipes
-                             ,actions: actions
+                             ,projects: projects
                              ,main: main};
 };</script></head><body><script type="text/javascript">Elm.fullscreen(Elm.Main)</script></body></html>
