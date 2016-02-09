@@ -1,10 +1,15 @@
 import Char exposing (KeyCode)
 import Html exposing (..)
-import Html.Attributes as Attrs
+import Html.Attributes as A
+import Html.Events as E
 import Keyboard
 import Json.Encode as Json
 import Svg
-import Svg.Attributes as SvgAttrs
+import Svg.Attributes as SvgA
+
+type Action
+  = MoveCursor Direction
+  | ScreenWipe
 
 type Direction
   = Up
@@ -59,16 +64,20 @@ moveCursor direction state =
       in
         if isValidPoint state cursor'
           then state
-          else {state | cursor = cursor', points = points'}
+          else { state | cursor = cursor', points = points' }
+
+wipeScreen : State -> State
+wipeScreen state =
+  { state | points = [] }
 
 point : Int -> String -> Coords -> Html
 point increment subkey (Coords x y) =
   Svg.rect
-    [ Attrs.key <| subkey ++ toString x ++ "," ++ toString y
-    , SvgAttrs.width <| toString increment
-    , SvgAttrs.height <| toString increment
-    , SvgAttrs.x <| toString <| x * increment
-    , SvgAttrs.y <| toString <| y * increment
+    [ A.key <| subkey ++ toString x ++ "," ++ toString y
+    , SvgA.width <| toString increment
+    , SvgA.height <| toString increment
+    , SvgA.x <| toString <| x * increment
+    , SvgA.y <| toString <| y * increment
     ]
     []
 
@@ -79,23 +88,26 @@ view state =
     cursor = point' "cursor" state.cursor
     points = List.map (point' "point") state.points
   in
-    div
-      [ Attrs.style
-        [ ("border", "1px solid black")
-        , ("width", (toString state.width) ++ "px")
-        , ("height", (toString state.height) ++ "px")
+    div []
+      [ div []
+        [ button [ E.onClick screenWipes.address True ]
+          [ text "Clear" ]
         ]
-      ]
-      [ Svg.svg
-          [ SvgAttrs.width <| (toString state.width)
-          , SvgAttrs.height <| (toString state.height)
+      , div []
+          [ Svg.svg
+            [ A.style [ ("border", "1px solid black") ]
+            , SvgA.width <| toString state.width
+            , SvgA.height <| toString state.height
+            ]
+            <| cursor :: points
           ]
-          <| cursor :: points
       ]
 
-update : Direction -> State -> State
-update direction state =
-  moveCursor direction state
+update : Action -> State -> State
+update action state =
+  case action of
+    MoveCursor direction -> moveCursor direction state
+    ScreenWipe -> wipeScreen state
 
 getKeyDirection : KeyCode -> Maybe Direction
 getKeyDirection keyCode =
@@ -114,6 +126,16 @@ keyDirections : Signal Direction
 keyDirections =
   Signal.filterMap getKeyDirection Up Keyboard.downs
 
+screenWipes : Signal.Mailbox Bool
+screenWipes = Signal.mailbox True
+
+actions : Signal Action
+actions =
+  Signal.mergeMany
+    [ Signal.map (\x -> MoveCursor x) keyDirections
+    , Signal.map (\_ -> ScreenWipe) screenWipes.signal
+    ]
+
 main : Signal Html
 main =
-  Signal.map view <| Signal.foldp update initState keyDirections
+  Signal.map view <| Signal.foldp update initState actions

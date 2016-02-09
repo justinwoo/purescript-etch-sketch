@@ -11495,6 +11495,93 @@ Elm.Html.Attributes.make = function (_elm) {
                                         ,manifest: manifest
                                         ,property: property
                                         ,attribute: attribute};
+};Elm.Html = Elm.Html || {};
+Elm.Html.Events = Elm.Html.Events || {};
+Elm.Html.Events.make = function (_elm) {
+   "use strict";
+   _elm.Html = _elm.Html || {};
+   _elm.Html.Events = _elm.Html.Events || {};
+   if (_elm.Html.Events.values) return _elm.Html.Events.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var _op = {};
+   var keyCode = A2($Json$Decode._op[":="],
+   "keyCode",
+   $Json$Decode.$int);
+   var targetChecked = A2($Json$Decode.at,
+   _U.list(["target","checked"]),
+   $Json$Decode.bool);
+   var targetValue = A2($Json$Decode.at,
+   _U.list(["target","value"]),
+   $Json$Decode.string);
+   var defaultOptions = $VirtualDom.defaultOptions;
+   var Options = F2(function (a,b) {
+      return {stopPropagation: a,preventDefault: b};
+   });
+   var onWithOptions = $VirtualDom.onWithOptions;
+   var on = $VirtualDom.on;
+   var messageOn = F3(function (name,addr,msg) {
+      return A3(on,
+      name,
+      $Json$Decode.value,
+      function (_p0) {
+         return A2($Signal.message,addr,msg);
+      });
+   });
+   var onClick = messageOn("click");
+   var onDoubleClick = messageOn("dblclick");
+   var onMouseMove = messageOn("mousemove");
+   var onMouseDown = messageOn("mousedown");
+   var onMouseUp = messageOn("mouseup");
+   var onMouseEnter = messageOn("mouseenter");
+   var onMouseLeave = messageOn("mouseleave");
+   var onMouseOver = messageOn("mouseover");
+   var onMouseOut = messageOn("mouseout");
+   var onBlur = messageOn("blur");
+   var onFocus = messageOn("focus");
+   var onSubmit = messageOn("submit");
+   var onKey = F3(function (name,addr,handler) {
+      return A3(on,
+      name,
+      keyCode,
+      function (code) {
+         return A2($Signal.message,addr,handler(code));
+      });
+   });
+   var onKeyUp = onKey("keyup");
+   var onKeyDown = onKey("keydown");
+   var onKeyPress = onKey("keypress");
+   return _elm.Html.Events.values = {_op: _op
+                                    ,onBlur: onBlur
+                                    ,onFocus: onFocus
+                                    ,onSubmit: onSubmit
+                                    ,onKeyUp: onKeyUp
+                                    ,onKeyDown: onKeyDown
+                                    ,onKeyPress: onKeyPress
+                                    ,onClick: onClick
+                                    ,onDoubleClick: onDoubleClick
+                                    ,onMouseMove: onMouseMove
+                                    ,onMouseDown: onMouseDown
+                                    ,onMouseUp: onMouseUp
+                                    ,onMouseEnter: onMouseEnter
+                                    ,onMouseLeave: onMouseLeave
+                                    ,onMouseOver: onMouseOver
+                                    ,onMouseOut: onMouseOut
+                                    ,on: on
+                                    ,onWithOptions: onWithOptions
+                                    ,defaultOptions: defaultOptions
+                                    ,targetValue: targetValue
+                                    ,targetChecked: targetChecked
+                                    ,keyCode: keyCode
+                                    ,Options: Options};
 };Elm.Svg = Elm.Svg || {};
 Elm.Svg.make = function (_elm) {
    "use strict";
@@ -12240,6 +12327,7 @@ Elm.Main.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -12248,6 +12336,7 @@ Elm.Main.make = function (_elm) {
    $Svg = Elm.Svg.make(_elm),
    $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
    var _op = {};
+   var screenWipes = $Signal.mailbox(true);
    var point = F3(function (increment,subkey,_p0) {
       var _p1 = _p0;
       var _p3 = _p1._1;
@@ -12269,21 +12358,24 @@ Elm.Main.make = function (_elm) {
       var cursor = A2(point$,"cursor",state.cursor);
       var points = A2($List.map,point$("point"),state.points);
       return A2($Html.div,
-      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
-                                               ,_0: "border"
-                                               ,_1: "1px solid black"}
-                                              ,{ctor: "_Tuple2"
-                                               ,_0: "width"
-                                               ,_1: A2($Basics._op["++"],$Basics.toString(state.width),"px")}
-                                              ,{ctor: "_Tuple2"
-                                               ,_0: "height"
-                                               ,_1: A2($Basics._op["++"],
-                                               $Basics.toString(state.height),
-                                               "px")}]))]),
-      _U.list([A2($Svg.svg,
-      _U.list([$Svg$Attributes.width($Basics.toString(state.width))
-              ,$Svg$Attributes.height($Basics.toString(state.height))]),
-      A2($List._op["::"],cursor,points))]));
+      _U.list([]),
+      _U.list([A2($Html.div,
+              _U.list([]),
+              _U.list([A2($Html.button,
+              _U.list([A2($Html$Events.onClick,screenWipes.address,true)]),
+              _U.list([$Html.text("Clear")]))]))
+              ,A2($Html.div,
+              _U.list([]),
+              _U.list([A2($Svg.svg,
+              _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                                       ,_0: "border"
+                                                       ,_1: "1px solid black"}]))
+                      ,$Svg$Attributes.width($Basics.toString(state.width))
+                      ,$Svg$Attributes.height($Basics.toString(state.height))]),
+              A2($List._op["::"],cursor,points))]))]));
+   };
+   var wipeScreen = function (state) {
+      return _U.update(state,{points: _U.list([])});
    };
    var insertPoint = F2(function (point,points) {
       var _p4 = A2($List.member,point,points);
@@ -12329,16 +12421,21 @@ Elm.Main.make = function (_elm) {
       return A2(isValidPoint,state,cursor$) ? state : _U.update(state,
       {cursor: cursor$,points: points$});
    });
-   var update = F2(function (direction,state) {
-      return A2(moveCursor,direction,state);
+   var update = F2(function (action,state) {
+      var _p12 = action;
+      if (_p12.ctor === "MoveCursor") {
+            return A2(moveCursor,_p12._0,state);
+         } else {
+            return wipeScreen(state);
+         }
    });
    var Right = {ctor: "Right"};
    var Left = {ctor: "Left"};
    var Down = {ctor: "Down"};
    var Up = {ctor: "Up"};
    var getKeyDirection = function (keyCode) {
-      var _p12 = keyCode;
-      switch (_p12)
+      var _p13 = keyCode;
+      switch (_p13)
       {case 38: return $Maybe.Just(Up);
          case 40: return $Maybe.Just(Down);
          case 37: return $Maybe.Just(Left);
@@ -12353,10 +12450,26 @@ Elm.Main.make = function (_elm) {
    getKeyDirection,
    Up,
    $Keyboard.downs);
+   var ScreenWipe = {ctor: "ScreenWipe"};
+   var MoveCursor = function (a) {
+      return {ctor: "MoveCursor",_0: a};
+   };
+   var actions = $Signal.mergeMany(_U.list([A2($Signal.map,
+                                           function (x) {
+                                              return MoveCursor(x);
+                                           },
+                                           keyDirections)
+                                           ,A2($Signal.map,
+                                           function (_p14) {
+                                              return ScreenWipe;
+                                           },
+                                           screenWipes.signal)]));
    var main = A2($Signal.map,
    view,
-   A3($Signal.foldp,update,initState,keyDirections));
+   A3($Signal.foldp,update,initState,actions));
    return _elm.Main.values = {_op: _op
+                             ,MoveCursor: MoveCursor
+                             ,ScreenWipe: ScreenWipe
                              ,Up: Up
                              ,Down: Down
                              ,Left: Left
@@ -12367,10 +12480,13 @@ Elm.Main.make = function (_elm) {
                              ,isValidPoint: isValidPoint
                              ,insertPoint: insertPoint
                              ,moveCursor: moveCursor
+                             ,wipeScreen: wipeScreen
                              ,point: point
                              ,view: view
                              ,update: update
                              ,getKeyDirection: getKeyDirection
                              ,keyDirections: keyDirections
+                             ,screenWipes: screenWipes
+                             ,actions: actions
                              ,main: main};
 };</script></head><body><script type="text/javascript">Elm.fullscreen(Elm.Main)</script></body></html>
