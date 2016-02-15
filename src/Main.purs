@@ -29,6 +29,7 @@ instance eqCoords :: Eq Coords where
 
 data Action
   = MoveCursor Direction
+  | ClearScreen
 
 type State =
   { cursor :: Coords
@@ -82,6 +83,10 @@ update action state input =
       { state: moveCursor direction state
       , effects: []
       }
+    ClearScreen ->
+      { state: state {points = []}
+      , effects: []
+      }
 
 pointView :: Int -> String -> Coords -> VirtualDOM
 pointView increment subkey (Coords x y) =
@@ -99,12 +104,15 @@ view state =
     cursor = pointView' "cursor" state.cursor
     points = map (pointView' "pointView") state.points
   in
-    E.div
-      $ E.parent "svg"
-        ! A.style { border: "1px solid black" }
-        ! A.width (show state.width)
-        ! A.height (show state.height)
-        $ cursor <> mconcat points
+    E.div $ do
+      E.div $
+        E.button ! A.onClick (A.send ClearScreen) $ E.text "Clear"
+      E.div $
+        E.parent "svg"
+          ! A.style { border: "1px solid black" }
+          ! A.width (show state.width)
+          ! A.height (show state.height)
+          $ cursor <> mconcat points
 
 main :: forall e. Eff (channel :: CHANNEL, dom :: DOM | e) Unit
 main = do

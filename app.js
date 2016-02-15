@@ -7853,6 +7853,11 @@ var MoveCursor = function () {
     };
     return MoveCursor;
 }();
+var ClearScreen = function () {
+    function ClearScreen() {};
+    ClearScreen.value = new ClearScreen();
+    return ClearScreen;
+}();
 var pointView = function pointView(increment) {
     return function (subkey) {
         return function (v) {
@@ -7864,9 +7869,11 @@ var view = function view(state) {
     var pointView$prime = pointView(state.increment);
     var points = Prelude.map(Prelude.functorArray)(pointView$prime("pointView"))(state.points);
     var cursor = pointView$prime("cursor")(state.cursor);
-    return Pux_DOM_HTML_Elements.div(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM_HTML_Elements.parent("svg"))(Pux_DOM_HTML_Attributes.style({
-        border: "1px solid black"
-    })))(Pux_DOM_HTML_Attributes.width(Prelude.show(Prelude.showInt)(state.width))))(Pux_DOM_HTML_Attributes.height(Prelude.show(Prelude.showInt)(state.height)))(Prelude["<>"](Pux_DOM.semigroupVDomM)(cursor)(Data_Foldable.mconcat(Data_Foldable.foldableArray)(Pux_DOM.monoidVDom)(points))));
+    return Pux_DOM_HTML_Elements.div(Prelude.bind(Pux_DOM.bindVDomM)(Pux_DOM_HTML_Elements.div(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM_HTML_Elements.button)(Pux_DOM_HTML_Attributes.onClick(Pux_DOM_HTML_Attributes.send(ClearScreen.value)))(Pux_DOM_HTML_Elements.text("Clear"))))(function () {
+        return Pux_DOM_HTML_Elements.div(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM_HTML_Elements.parent("svg"))(Pux_DOM_HTML_Attributes.style({
+            border: "1px solid black"
+        })))(Pux_DOM_HTML_Attributes.width(Prelude.show(Prelude.showInt)(state.width))))(Pux_DOM_HTML_Attributes.height(Prelude.show(Prelude.showInt)(state.height)))(Prelude["<>"](Pux_DOM.semigroupVDomM)(cursor)(Data_Foldable.mconcat(Data_Foldable.foldableArray)(Pux_DOM.monoidVDom)(points))));
+    }));
 };
 var isValidPoint = function isValidPoint(state) {
     return function (coords) {
@@ -7894,7 +7901,7 @@ var insertPoint = function insertPoint(point) {
         if ($21 instanceof Data_Maybe.Nothing) {
             return Data_Array.cons(point)(points);
         };
-        throw new Error("Failed pattern match at Main line 57, column 1 - line 58, column 1: " + [$21.constructor.name]);
+        throw new Error("Failed pattern match at Main line 58, column 1 - line 59, column 1: " + [$21.constructor.name]);
     };
 };
 var moveCursor = function moveCursor(direction) {
@@ -7913,7 +7920,7 @@ var moveCursor = function moveCursor(direction) {
             if (direction instanceof Right) {
                 return new Coords(state.cursor.value0 + 1 | 0, state.cursor.value1);
             };
-            throw new Error("Failed pattern match at Main line 68, column 11 - line 74, column 7: " + [direction.constructor.name]);
+            throw new Error("Failed pattern match at Main line 69, column 11 - line 75, column 7: " + [direction.constructor.name]);
         }();
         var $25 = isValidPoint(state)(cursor$prime);
         if ($25) {
@@ -7930,16 +7937,34 @@ var moveCursor = function moveCursor(direction) {
             $26.points = points$prime;
             return $26;
         };
-        throw new Error("Failed pattern match at Main line 63, column 1 - line 64, column 1: " + [$25.constructor.name]);
+        throw new Error("Failed pattern match at Main line 64, column 1 - line 65, column 1: " + [$25.constructor.name]);
     };
 };
 var update = function update(action) {
     return function (state) {
         return function (input) {
-            return {
-                state: moveCursor(action.value0)(state),
-                effects: []
+            if (action instanceof MoveCursor) {
+                return {
+                    state: moveCursor(action.value0)(state),
+                    effects: []
+                };
             };
+            if (action instanceof ClearScreen) {
+                return {
+                    state: function () {
+                        var $32 = {};
+                        for (var $33 in state) {
+                            if (state.hasOwnProperty($33)) {
+                                $32[$33] = state[$33];
+                            };
+                        };
+                        $32.points = [];
+                        return $32;
+                    }(),
+                    effects: []
+                };
+            };
+            throw new Error("Failed pattern match at Main line 79, column 1 - line 80, column 1: " + [action.constructor.name]);
         };
     };
 };
@@ -7957,6 +7982,7 @@ var main = function __do() {
 };
 module.exports = {
     MoveCursor: MoveCursor,
+    ClearScreen: ClearScreen,
     Coords: Coords,
     Up: Up,
     Down: Down,
