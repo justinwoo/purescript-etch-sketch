@@ -1,11 +1,20 @@
 module Main where
 
-import Prelude (Unit, bind, ($), (-), (*), (>), (||), (<), (+), (==), (&&), class Eq)
+import Prelude (class Eq, Unit, ($), (<>), bind, show, map, (*), (++), (+), (-), (>), (||), (<), (==), (&&))
+import Control.Bind ((=<<))
 import Control.Monad.Eff (Eff)
 import Data.Array as Array
-import DOM (DOM)
+import Data.Foldable (mconcat)
 import Data.Maybe (Maybe(Nothing, Just))
-import Signal (constant, sampleOn, mergeMany, foldp, runSignal, (<~))
+import DOM (DOM)
+import Pux.App (app, Update())
+import Pux.DOM (VirtualDOM(), (!))
+import Pux.DOM.HTML.Elements as E
+import Pux.DOM.HTML.Attributes as A
+import Pux.React (makeAttr)
+import Pux.Render.DOM (renderToDOM)
+import Signal (sampleOn, constant)
+import Signal.Channel (CHANNEL)
 import Signal.DOM (keyPressed)
 
 data Direction
@@ -17,6 +26,9 @@ data Direction
 data Coords = Coords Int Int
 instance eqCoords :: Eq Coords where
   eq (Coords ax ay) (Coords bx by) = ax == bx && ay == by
+
+data Action
+  = MoveCursor Direction
 
 type State =
   { cursor :: Coords
@@ -63,26 +75,51 @@ moveCursor direction state =
           then state
           else state {cursor = cursor', points = points'}
 
-update :: Direction -> State -> State
-update direction state =
-  moveCursor direction state
+update :: forall eff. Update (eff) State Action
+update action state input =
+  case action of
+    MoveCursor direction ->
+      { state: moveCursor direction state
+      , effects: []
+      }
 
-foreign import jsRender :: forall e. State -> Eff (dom :: DOM | e) Unit
-foreign import jsRenderError :: Eff (dom :: DOM) Unit
+pointView :: Int -> String -> Coords -> VirtualDOM
+pointView increment subkey (Coords x y) =
+  E.leaf "rect"
+    ! A.key (subkey ++ show x ++ "," ++ show y)
+    ! A.width (show increment)
+    ! A.height (show increment)
+    ! makeAttr "x" (show $ x * increment)
+    ! makeAttr "y" (show $ y * increment)
 
-main :: Eff (dom :: DOM) Unit
+view :: State -> VirtualDOM
+view state =
+  let
+    pointView' = pointView state.increment
+    cursor = pointView' "cursor" state.cursor
+    points = map (pointView' "pointView") state.points
+  in
+    E.div
+      $ E.parent "svg"
+        ! A.style { border: "1px solid black" }
+        ! A.width (show state.width)
+        ! A.height (show state.height)
+        $ cursor <> mconcat points
+
+main :: forall e. Eff (channel :: CHANNEL, dom :: DOM | e) Unit
 main = do
   upInput <- keyPressed 38
   downInput <- keyPressed 40
   leftInput <- keyPressed 37
   rightInput <- keyPressed 39
-  let directionInput =
-      mergeMany
-        [ sampleOn upInput $ constant Up
-        , sampleOn downInput $ constant Down
-        , sampleOn leftInput $ constant Left
-        , sampleOn rightInput $ constant Right
+  renderToDOM "#app" =<< app
+    { state: initState
+    , update: update
+    , view: view
+    , inputs:
+        [ sampleOn upInput $ constant $ MoveCursor Up
+        , sampleOn downInput $ constant $ MoveCursor Down
+        , sampleOn leftInput $ constant $ MoveCursor Left
+        , sampleOn rightInput $ constant $ MoveCursor Right
         ]
-  case directionInput of
-    Just signal -> runSignal $ jsRender <~ foldp update initState signal
-    Nothing -> jsRenderError
+    }

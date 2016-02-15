@@ -19,6 +19,7 @@
     "purescript-generics": "^0.7.2",
     "purescript-arrays": "^0.4.4",
     "purescript-dom": "^0.2.15",
-    "purescript-signal": "^5.0.0"
+    "purescript-signal": "^5.0.0",
+    "purescript-pux": "^0.2.0"
   }
 }
