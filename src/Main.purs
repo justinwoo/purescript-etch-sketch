@@ -49,11 +49,9 @@ initState =
   }
 
 isValidPoint :: State -> Coords -> Boolean
-isValidPoint state coords =
-  case coords of
-    Coords x y ->
-      x < 0 || (state.increment * x) > (state.width - state.increment) ||
-      y < 0 || (state.increment * y) > (state.height - state.increment)
+isValidPoint state (Coords x y) =
+  x < 0 || (state.increment * x) > (state.width - state.increment) ||
+  y < 0 || (state.increment * y) > (state.height - state.increment)
 
 insertPoint :: Coords -> Array Coords -> Array Coords
 insertPoint point points =
@@ -77,16 +75,14 @@ moveCursor direction state =
           else state {cursor = cursor', points = points'}
 
 update :: forall eff. Update (eff) State Action
-update action state input =
-  case action of
-    MoveCursor direction ->
-      { state: moveCursor direction state
-      , effects: []
-      }
-    ClearScreen ->
-      { state: state {points = []}
-      , effects: []
-      }
+update (MoveCursor direction) state input =
+  { state: moveCursor direction state
+  , effects: []
+  }
+update ClearScreen state input =
+  { state: state {points = []}
+  , effects: []
+  }
 
 pointView :: Int -> String -> Coords -> VirtualDOM
 pointView increment subkey (Coords x y) =

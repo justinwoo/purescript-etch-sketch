@@ -7876,8 +7876,8 @@ var view = function view(state) {
     }));
 };
 var isValidPoint = function isValidPoint(state) {
-    return function (coords) {
-        return coords.value0 < 0 || (state.increment * coords.value0 | 0) > state.width - state.increment || coords.value1 < 0 || (state.increment * coords.value1 | 0) > state.height - state.increment;
+    return function (v) {
+        return v.value0 < 0 || (state.increment * v.value0 | 0) > state.width - state.increment || v.value1 < 0 || (state.increment * v.value1 | 0) > state.height - state.increment;
     };
 };
 var initState = {
@@ -7894,14 +7894,14 @@ var eqCoords = new Prelude.Eq(function (v) {
 });
 var insertPoint = function insertPoint(point) {
     return function (points) {
-        var $21 = Data_Array.elemIndex(eqCoords)(point)(points);
-        if ($21 instanceof Data_Maybe.Just) {
+        var $24 = Data_Array.elemIndex(eqCoords)(point)(points);
+        if ($24 instanceof Data_Maybe.Just) {
             return points;
         };
-        if ($21 instanceof Data_Maybe.Nothing) {
+        if ($24 instanceof Data_Maybe.Nothing) {
             return Data_Array.cons(point)(points);
         };
-        throw new Error("Failed pattern match at Main line 58, column 1 - line 59, column 1: " + [$21.constructor.name]);
+        throw new Error("Failed pattern match at Main line 56, column 1 - line 57, column 1: " + [$24.constructor.name]);
     };
 };
 var moveCursor = function moveCursor(direction) {
@@ -7920,51 +7920,51 @@ var moveCursor = function moveCursor(direction) {
             if (direction instanceof Right) {
                 return new Coords(state.cursor.value0 + 1 | 0, state.cursor.value1);
             };
-            throw new Error("Failed pattern match at Main line 69, column 11 - line 75, column 7: " + [direction.constructor.name]);
+            throw new Error("Failed pattern match at Main line 67, column 11 - line 73, column 7: " + [direction.constructor.name]);
         }();
-        var $25 = isValidPoint(state)(cursor$prime);
-        if ($25) {
+        var $28 = isValidPoint(state)(cursor$prime);
+        if ($28) {
             return state;
         };
-        if (!$25) {
-            var $26 = {};
-            for (var $27 in state) {
-                if (state.hasOwnProperty($27)) {
-                    $26[$27] = state[$27];
+        if (!$28) {
+            var $29 = {};
+            for (var $30 in state) {
+                if (state.hasOwnProperty($30)) {
+                    $29[$30] = state[$30];
                 };
             };
-            $26.cursor = cursor$prime;
-            $26.points = points$prime;
-            return $26;
+            $29.cursor = cursor$prime;
+            $29.points = points$prime;
+            return $29;
         };
-        throw new Error("Failed pattern match at Main line 64, column 1 - line 65, column 1: " + [$25.constructor.name]);
+        throw new Error("Failed pattern match at Main line 62, column 1 - line 63, column 1: " + [$28.constructor.name]);
     };
 };
-var update = function update(action) {
+var update = function update(v) {
     return function (state) {
         return function (input) {
-            if (action instanceof MoveCursor) {
+            if (v instanceof MoveCursor) {
                 return {
-                    state: moveCursor(action.value0)(state),
+                    state: moveCursor(v.value0)(state),
                     effects: []
                 };
             };
-            if (action instanceof ClearScreen) {
+            if (v instanceof ClearScreen) {
                 return {
                     state: function () {
-                        var $32 = {};
-                        for (var $33 in state) {
-                            if (state.hasOwnProperty($33)) {
-                                $32[$33] = state[$33];
+                        var $37 = {};
+                        for (var $38 in state) {
+                            if (state.hasOwnProperty($38)) {
+                                $37[$38] = state[$38];
                             };
                         };
-                        $32.points = [];
-                        return $32;
+                        $37.points = [];
+                        return $37;
                     }(),
                     effects: []
                 };
             };
-            throw new Error("Failed pattern match at Main line 79, column 1 - line 80, column 1: " + [action.constructor.name]);
+            throw new Error("Failed pattern match at Main line 77, column 1 - line 78, column 1: " + [v.constructor.name, state.constructor.name, input.constructor.name]);
         };
     };
 };
