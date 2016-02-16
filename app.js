@@ -7875,7 +7875,7 @@ var view = function view(state) {
         })))(Pux_DOM_HTML_Attributes.width(Prelude.show(Prelude.showInt)(state.width))))(Pux_DOM_HTML_Attributes.height(Prelude.show(Prelude.showInt)(state.height)))(Prelude["<>"](Pux_DOM.semigroupVDomM)(cursor)(Data_Foldable.mconcat(Data_Foldable.foldableArray)(Pux_DOM.monoidVDom)(points))));
     }));
 };
-var isValidPoint = function isValidPoint(state) {
+var isInvalidPoint = function isInvalidPoint(state) {
     return function (v) {
         return v.value0 < 0 || (state.increment * v.value0 | 0) > state.width - state.increment || v.value1 < 0 || (state.increment * v.value1 | 0) > state.height - state.increment;
     };
@@ -7922,7 +7922,7 @@ var moveCursor = function moveCursor(direction) {
             };
             throw new Error("Failed pattern match at Main line 67, column 11 - line 73, column 7: " + [direction.constructor.name]);
         }();
-        var $28 = isValidPoint(state)(cursor$prime);
+        var $28 = isInvalidPoint(state)(cursor$prime);
         if ($28) {
             return state;
         };
@@ -7994,7 +7994,7 @@ module.exports = {
     update: update,
     moveCursor: moveCursor,
     insertPoint: insertPoint,
-    isValidPoint: isValidPoint,
+    isInvalidPoint: isInvalidPoint,
     initState: initState,
     eqCoords: eqCoords
 };

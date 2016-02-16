@@ -48,8 +48,8 @@ initState =
   , increment: 10
   }
 
-isValidPoint :: State -> Coords -> Boolean
-isValidPoint state (Coords x y) =
+isInvalidPoint :: State -> Coords -> Boolean
+isInvalidPoint state (Coords x y) =
   x < 0 || (state.increment * x) > (state.width - state.increment) ||
   y < 0 || (state.increment * y) > (state.height - state.increment)
 
@@ -70,9 +70,9 @@ moveCursor direction state =
             Down -> Coords x (y + 1)
             Left -> Coords (x - 1) y
             Right -> Coords (x + 1) y
-      if isValidPoint state cursor'
-          then state
-          else state {cursor = cursor', points = points'}
+      if isInvalidPoint state cursor'
+        then state
+        else state {cursor = cursor', points = points'}
 
 update :: forall eff. Update (eff) State Action
 update (MoveCursor direction) state input =
