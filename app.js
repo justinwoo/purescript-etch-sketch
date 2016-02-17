@@ -7730,7 +7730,6 @@ var Pux_App = require("Pux.App");
 var Pux_DOM = require("Pux.DOM");
 var Pux_DOM_HTML_Elements = require("Pux.DOM.HTML.Elements");
 var Pux_DOM_HTML_Attributes = require("Pux.DOM.HTML.Attributes");
-var Pux_React = require("Pux.React");
 var Pux_Render_DOM = require("Pux.Render.DOM");
 var Signal = require("Signal");
 var Signal_Channel = require("Signal.Channel");
@@ -7788,7 +7787,7 @@ var NoOp = function () {
 var pointView = function pointView(increment) {
     return function (subkey) {
         return function (v) {
-            return Pux_DOM["!"](Pux_DOM.attributableVDomM)(Pux_DOM["!"](Pux_DOM.attributableVDomM)(Pux_DOM["!"](Pux_DOM.attributableVDomM)(Pux_DOM["!"](Pux_DOM.attributableVDomM)(Pux_DOM["!"](Pux_DOM.attributableVDomM)(Pux_DOM_HTML_Elements.leaf("rect"))(Pux_DOM_HTML_Attributes.key(subkey + (Prelude.show(Prelude.showInt)(v.value0) + ("," + Prelude.show(Prelude.showInt)(v.value1))))))(Pux_DOM_HTML_Attributes.width(Prelude.show(Prelude.showInt)(increment))))(Pux_DOM_HTML_Attributes.height(Prelude.show(Prelude.showInt)(increment))))(Pux_React.makeAttr("x")(Prelude.show(Prelude.showInt)(v.value0 * increment | 0))))(Pux_React.makeAttr("y")(Prelude.show(Prelude.showInt)(v.value1 * increment | 0)));
+            return Pux_DOM["!"](Pux_DOM.attributableVDomM)(Pux_DOM["!"](Pux_DOM.attributableVDomM)(Pux_DOM["!"](Pux_DOM.attributableVDomM)(Pux_DOM["!"](Pux_DOM.attributableVDomM)(Pux_DOM["!"](Pux_DOM.attributableVDomM)(Pux_DOM_HTML_Elements.rect)(Pux_DOM_HTML_Attributes.key(subkey + (Prelude.show(Prelude.showInt)(v.value0) + ("," + Prelude.show(Prelude.showInt)(v.value1))))))(Pux_DOM_HTML_Attributes.width(Prelude.show(Prelude.showInt)(increment))))(Pux_DOM_HTML_Attributes.height(Prelude.show(Prelude.showInt)(increment))))(Pux_DOM_HTML_Attributes.x(Prelude.show(Prelude.showInt)(v.value0 * increment | 0))))(Pux_DOM_HTML_Attributes.y(Prelude.show(Prelude.showInt)(v.value1 * increment | 0)));
         };
     };
 };
@@ -7797,7 +7796,7 @@ var view = function view(state) {
     var points = Prelude.map(Prelude.functorArray)(pointView$prime("pointView"))(state.points);
     var cursor = pointView$prime("cursor")(state.cursor);
     return Pux_DOM_HTML_Elements.div(Prelude.bind(Pux_DOM.bindVDomM)(Pux_DOM_HTML_Elements.div(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM_HTML_Elements.button)(Pux_DOM_HTML_Attributes.onClick(Pux_DOM_HTML_Attributes.send(ClearScreen.value)))(Pux_DOM_HTML_Elements.text("Clear"))))(function () {
-        return Pux_DOM_HTML_Elements.div(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM_HTML_Elements.parent("svg"))(Pux_DOM_HTML_Attributes.style({
+        return Pux_DOM_HTML_Elements.div(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM["!"](Pux_DOM.attributableVDomMF)(Pux_DOM_HTML_Elements.svg)(Pux_DOM_HTML_Attributes.style({
             border: "1px solid black"
         })))(Pux_DOM_HTML_Attributes.width(Prelude.show(Prelude.showInt)(state.width))))(Pux_DOM_HTML_Attributes.height(Prelude.show(Prelude.showInt)(state.height)))(Prelude["<>"](Pux_DOM.semigroupVDomM)(cursor)(Data_Foldable.mconcat(Data_Foldable.foldableArray)(Pux_DOM.monoidVDom)(points))));
     }));
@@ -7844,7 +7843,7 @@ var insertPoint = function insertPoint(point) {
         if ($22 instanceof Data_Maybe.Nothing) {
             return Data_Array.cons(point)(points);
         };
-        throw new Error("Failed pattern match at Main line 56, column 1 - line 57, column 1: " + [$22.constructor.name]);
+        throw new Error("Failed pattern match at Main line 55, column 1 - line 56, column 1: " + [$22.constructor.name]);
     };
 };
 var moveCursor = function moveCursor(direction) {
@@ -7863,7 +7862,7 @@ var moveCursor = function moveCursor(direction) {
             if (direction instanceof Right) {
                 return new Coords(state.cursor.value0 + 1 | 0, state.cursor.value1);
             };
-            throw new Error("Failed pattern match at Main line 67, column 11 - line 73, column 7: " + [direction.constructor.name]);
+            throw new Error("Failed pattern match at Main line 66, column 11 - line 72, column 7: " + [direction.constructor.name]);
         }();
         var $26 = isInvalidPoint(state)(cursor$prime);
         if ($26) {
@@ -7880,7 +7879,7 @@ var moveCursor = function moveCursor(direction) {
             $27.points = points$prime;
             return $27;
         };
-        throw new Error("Failed pattern match at Main line 62, column 1 - line 63, column 1: " + [$26.constructor.name]);
+        throw new Error("Failed pattern match at Main line 61, column 1 - line 62, column 1: " + [$26.constructor.name]);
     };
 };
 var update = function update(v) {
@@ -7913,7 +7912,7 @@ var update = function update(v) {
                     effects: []
                 };
             };
-            throw new Error("Failed pattern match at Main line 77, column 1 - line 78, column 1: " + [v.constructor.name, state.constructor.name, input.constructor.name]);
+            throw new Error("Failed pattern match at Main line 76, column 1 - line 77, column 1: " + [v.constructor.name, state.constructor.name, input.constructor.name]);
         };
     };
 };
@@ -7949,7 +7948,7 @@ module.exports = {
     keydownP: $foreign.keydownP
 };
 
-},{"./foreign":"/Users/jwoo/Code/purescript-etch-sketch/output/Main/foreign.js","Control.Bind":"/Users/jwoo/Code/purescript-etch-sketch/output/Control.Bind/index.js","Control.Monad.Eff":"/Users/jwoo/Code/purescript-etch-sketch/output/Control.Monad.Eff/index.js","DOM":"/Users/jwoo/Code/purescript-etch-sketch/output/DOM/index.js","Data.Array":"/Users/jwoo/Code/purescript-etch-sketch/output/Data.Array/index.js","Data.Foldable":"/Users/jwoo/Code/purescript-etch-sketch/output/Data.Foldable/index.js","Data.Maybe":"/Users/jwoo/Code/purescript-etch-sketch/output/Data.Maybe/index.js","Prelude":"/Users/jwoo/Code/purescript-etch-sketch/output/Prelude/index.js","Pux.App":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.App/index.js","Pux.DOM":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.DOM/index.js","Pux.DOM.HTML.Attributes":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.DOM.HTML.Attributes/index.js","Pux.DOM.HTML.Elements":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.DOM.HTML.Elements/index.js","Pux.React":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.React/index.js","Pux.Render.DOM":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.Render.DOM/index.js","Signal":"/Users/jwoo/Code/purescript-etch-sketch/output/Signal/index.js","Signal.Channel":"/Users/jwoo/Code/purescript-etch-sketch/output/Signal.Channel/index.js"}],"/Users/jwoo/Code/purescript-etch-sketch/output/Math/foreign.js":[function(require,module,exports){
+},{"./foreign":"/Users/jwoo/Code/purescript-etch-sketch/output/Main/foreign.js","Control.Bind":"/Users/jwoo/Code/purescript-etch-sketch/output/Control.Bind/index.js","Control.Monad.Eff":"/Users/jwoo/Code/purescript-etch-sketch/output/Control.Monad.Eff/index.js","DOM":"/Users/jwoo/Code/purescript-etch-sketch/output/DOM/index.js","Data.Array":"/Users/jwoo/Code/purescript-etch-sketch/output/Data.Array/index.js","Data.Foldable":"/Users/jwoo/Code/purescript-etch-sketch/output/Data.Foldable/index.js","Data.Maybe":"/Users/jwoo/Code/purescript-etch-sketch/output/Data.Maybe/index.js","Prelude":"/Users/jwoo/Code/purescript-etch-sketch/output/Prelude/index.js","Pux.App":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.App/index.js","Pux.DOM":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.DOM/index.js","Pux.DOM.HTML.Attributes":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.DOM.HTML.Attributes/index.js","Pux.DOM.HTML.Elements":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.DOM.HTML.Elements/index.js","Pux.Render.DOM":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.Render.DOM/index.js","Signal":"/Users/jwoo/Code/purescript-etch-sketch/output/Signal/index.js","Signal.Channel":"/Users/jwoo/Code/purescript-etch-sketch/output/Signal.Channel/index.js"}],"/Users/jwoo/Code/purescript-etch-sketch/output/Math/foreign.js":[function(require,module,exports){
 /* global exports */
 "use strict";
 

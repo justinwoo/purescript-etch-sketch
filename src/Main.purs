@@ -11,7 +11,6 @@ import Pux.App (app, Update())
 import Pux.DOM (VirtualDOM(), (!))
 import Pux.DOM.HTML.Elements as E
 import Pux.DOM.HTML.Attributes as A
-import Pux.React (makeAttr)
 import Pux.Render.DOM (renderToDOM)
 import Signal (Signal, constant, (<~))
 import Signal.Channel (CHANNEL)
@@ -90,12 +89,12 @@ update NoOp state input =
 
 pointView :: Int -> String -> Coords -> VirtualDOM
 pointView increment subkey (Coords x y) =
-  E.leaf "rect"
+  E.rect
     ! A.key (subkey ++ show x ++ "," ++ show y)
     ! A.width (show increment)
     ! A.height (show increment)
-    ! makeAttr "x" (show $ x * increment)
-    ! makeAttr "y" (show $ y * increment)
+    ! A.x (show $ x * increment)
+    ! A.y (show $ y * increment)
 
 view :: State -> VirtualDOM
 view state =
@@ -108,7 +107,7 @@ view state =
       E.div $
         E.button ! A.onClick (A.send ClearScreen) $ E.text "Clear"
       E.div $
-        E.parent "svg"
+        E.svg
           ! A.style { border: "1px solid black" }
           ! A.width (show state.width)
           ! A.height (show state.height)
