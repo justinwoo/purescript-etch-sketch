@@ -13,9 +13,8 @@ import Pux.DOM.HTML.Elements as E
 import Pux.DOM.HTML.Attributes as A
 import Pux.React (makeAttr)
 import Pux.Render.DOM (renderToDOM)
-import Signal (sampleOn, constant)
+import Signal (Signal, constant, (<~))
 import Signal.Channel (CHANNEL)
-import Signal.DOM (keyPressed)
 
 data Direction
   = Up
@@ -30,6 +29,7 @@ instance eqCoords :: Eq Coords where
 data Action
   = MoveCursor Direction
   | ClearScreen
+  | NoOp
 
 type State =
   { cursor :: Coords
@@ -83,6 +83,10 @@ update ClearScreen state input =
   { state: state {points = []}
   , effects: []
   }
+update NoOp state input =
+  { state: state
+  , effects: []
+  }
 
 pointView :: Int -> String -> Coords -> VirtualDOM
 pointView increment subkey (Coords x y) =
@@ -110,20 +114,28 @@ view state =
           ! A.height (show state.height)
           $ cursor <> mconcat points
 
+foreign import keydownP :: forall e c. (c -> Signal c) -> Eff (dom :: DOM | e) (Signal Int)
+
+keydown :: forall e. Eff (dom :: DOM | e) (Signal Int)
+keydown = keydownP constant
+
+keyDirections :: Int -> Action
+keyDirections keyCode =
+  case keyCode of
+    38 -> MoveCursor Up
+    40 -> MoveCursor Down
+    37 -> MoveCursor Left
+    39 -> MoveCursor Right
+    _ -> NoOp
+
 main :: forall e. Eff (channel :: CHANNEL, dom :: DOM | e) Unit
 main = do
-  upInput <- keyPressed 38
-  downInput <- keyPressed 40
-  leftInput <- keyPressed 37
-  rightInput <- keyPressed 39
+  keydown' <- keydown
   renderToDOM "#app" =<< app
     { state: initState
     , update: update
     , view: view
     , inputs:
-        [ sampleOn upInput $ constant $ MoveCursor Up
-        , sampleOn downInput $ constant $ MoveCursor Down
-        , sampleOn leftInput $ constant $ MoveCursor Left
-        , sampleOn rightInput $ constant $ MoveCursor Right
+        [ keyDirections <~ keydown'
         ]
     }
