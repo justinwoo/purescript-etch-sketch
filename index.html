@@ -12389,10 +12389,10 @@ Elm.Main.make = function (_elm) {
       var _p6 = coords;
       var _p8 = _p6._1;
       var _p7 = _p6._0;
-      return _U.cmp(_p7,0) < 0 || (_U.cmp(state.increment * (_p7 + 1),
-      state.width) > 0 || (_U.cmp(_p8,
-      0) < 0 || _U.cmp(state.increment * (_p8 + 1),
-      state.height) > 0));
+      return _U.cmp(_p7,0) < 0 ? false : _U.cmp(_p8,
+      0) < 0 ? false : _U.cmp(state.increment * (_p7 + 1),
+      state.width) > 0 ? false : _U.cmp(state.increment * (_p8 + 1),
+      state.height) > 0 ? false : true;
    });
    var State = F5(function (a,b,c,d,e) {
       return {cursor: a,points: b,width: c,height: d,increment: e};

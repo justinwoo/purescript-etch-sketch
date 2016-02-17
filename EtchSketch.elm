@@ -44,10 +44,16 @@ isInvalidPoint : State -> Coords -> Bool
 isInvalidPoint state coords =
   case coords of
     Coords x y ->
-      (x < 0)
-        || ((state.increment * (x + 1)) > state.width)
-        || (y < 0)
-        || ((state.increment * (y + 1)) > state.height)
+      if x < 0 then
+        False
+      else if y < 0 then
+        False
+      else if (state.increment * (x + 1)) > state.width then
+        False
+      else if (state.increment * (y + 1)) > state.height then
+        False
+      else
+        True
 
 
 insertPoint : Coords -> List Coords -> List Coords
