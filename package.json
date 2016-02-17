@@ -1,0 +1,22 @@
+{
+  "name": "eafdfasdfwe23513",
+  "version": "1.0.0",
+  "description": "elm-version",
+  "main": "elm.js",
+  "scripts": {
+    "start": "watch 'elm-make src/EtchSketch.elm --output build/index.js' src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/justinwoo/purescript-etch-sketch.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/justinwoo/purescript-etch-sketch/issues"
+  },
+  "homepage": "https://github.com/justinwoo/purescript-etch-sketch#readme",
+  "devDependencies": {
+    "watch": "^0.17.1"
+  }
+}

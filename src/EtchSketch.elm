@@ -4,8 +4,6 @@ import Char exposing (KeyCode)
 import Html exposing (..)
 import Html.Attributes as A
 import Html.Events as E
-import Keyboard
-import Json.Encode as Json
 import Svg
 import Svg.Attributes as SvgA
 
@@ -45,15 +43,15 @@ isInvalidPoint state coords =
   case coords of
     Coords x y ->
       if x < 0 then
-        False
-      else if y < 0 then
-        False
-      else if (state.increment * (x + 1)) > state.width then
-        False
-      else if (state.increment * (y + 1)) > state.height then
-        False
-      else
         True
+      else if y < 0 then
+        True
+      else if (state.increment * (x + 1)) > state.width then
+        True
+      else if (state.increment * (y + 1)) > state.height then
+        True
+      else
+        False
 
 
 insertPoint : Coords -> List Coords -> List Coords
@@ -163,9 +161,10 @@ getKeyDirection keyCode =
       Nothing
 
 
+port keyboard : Signal KeyCode
 keyDirections : Signal Direction
 keyDirections =
-  Signal.filterMap getKeyDirection Up Keyboard.downs
+  Signal.filterMap getKeyDirection Up keyboard
 
 
 screenWipes : Signal.Mailbox Bool
