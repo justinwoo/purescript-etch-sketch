@@ -1,3 +1,5 @@
+module Main (..) where
+
 import Char exposing (KeyCode)
 import Html exposing (..)
 import Html.Attributes as A
@@ -7,13 +9,17 @@ import Json.Encode as Json
 import Svg
 import Svg.Attributes as SvgA
 
+
 type Direction
   = Up
   | Down
   | Left
   | Right
 
-type Coords = Coords Int Int
+
+type Coords
+  = Coords Int Int
+
 
 type alias State =
   { cursor : Coords
@@ -22,6 +28,7 @@ type alias State =
   , height : Int
   , increment : Int
   }
+
 
 initState : State
 initState =
@@ -32,39 +39,59 @@ initState =
   , increment = 10
   }
 
-isValidPoint : State -> Coords -> Bool
-isValidPoint state coords =
+
+isInvalidPoint : State -> Coords -> Bool
+isInvalidPoint state coords =
   case coords of
     Coords x y ->
-      x < 0 || (state.increment * x) > (state.width - state.increment) ||
-      y < 0 || (state.increment * y) > (state.height - state.increment)
+      (x < 0)
+        || ((state.increment * (x + 1)) > state.width)
+        || (y < 0)
+        || ((state.increment * (y + 1)) > state.height)
+
 
 insertPoint : Coords -> List Coords -> List Coords
 insertPoint point points =
   case List.member point points of
-    True -> points
-    False -> point :: points
+    True ->
+      points
+
+    False ->
+      point :: points
+
 
 moveCursor : Direction -> State -> State
 moveCursor direction state =
   case state.cursor of
     Coords x y ->
       let
-        points' = insertPoint state.cursor state.points
+        points' =
+          insertPoint state.cursor state.points
+
         cursor' =
           case direction of
-              Up -> Coords x (y - 1)
-              Down -> Coords x (y + 1)
-              Left -> Coords (x - 1) y
-              Right -> Coords (x + 1) y
+            Up ->
+              Coords x (y - 1)
+
+            Down ->
+              Coords x (y + 1)
+
+            Left ->
+              Coords (x - 1) y
+
+            Right ->
+              Coords (x + 1) y
       in
-        if isValidPoint state cursor'
-          then state
-          else { state | cursor = cursor', points = points' }
+        if isInvalidPoint state cursor' then
+          state
+        else
+          { state | cursor = cursor', points = points' }
+
 
 wipeScreen : a -> State -> State
 wipeScreen _ state =
   { state | points = [] }
+
 
 point : Int -> String -> Coords -> Html
 point increment subkey (Coords x y) =
@@ -77,43 +104,68 @@ point increment subkey (Coords x y) =
     ]
     []
 
+
 view : State -> Html
 view state =
   let
-    point' = point state.increment
-    cursor = point' "cursor" state.cursor
-    points = List.map (point' "point") state.points
+    point' =
+      point state.increment
+
+    cursor =
+      point' "cursor" state.cursor
+
+    points =
+      List.map (point' "point") state.points
   in
-    div []
-      [ div []
-        [ button [ E.onClick screenWipes.address True ]
-          [ text "Clear" ]
-        ]
-      , div []
+    div
+      []
+      [ div
+          []
+          [ button
+              [ E.onClick screenWipes.address True ]
+              [ text "Clear" ]
+          ]
+      , div
+          []
           [ Svg.svg
-            [ A.style [ ("border", "1px solid black") ]
-            , SvgA.width <| toString state.width
-            , SvgA.height <| toString state.height
-            ]
-            <| cursor :: points
+              [ A.style [ ( "border", "1px solid black" ) ]
+              , SvgA.width <| toString state.width
+              , SvgA.height <| toString state.height
+              ]
+              <| cursor
+              :: points
           ]
       ]
+
 
 getKeyDirection : KeyCode -> Maybe Direction
 getKeyDirection keyCode =
   case keyCode of
-    38 -> Just Up
-    40 -> Just Down
-    37 -> Just Left
-    39 -> Just Right
-    _ -> Nothing
+    38 ->
+      Just Up
+
+    40 ->
+      Just Down
+
+    37 ->
+      Just Left
+
+    39 ->
+      Just Right
+
+    _ ->
+      Nothing
+
 
 keyDirections : Signal Direction
 keyDirections =
   Signal.filterMap getKeyDirection Up Keyboard.downs
 
+
 screenWipes : Signal.Mailbox Bool
-screenWipes = Signal.mailbox True
+screenWipes =
+  Signal.mailbox True
+
 
 projects : Signal (State -> State)
 projects =
@@ -121,6 +173,7 @@ projects =
     [ Signal.map moveCursor keyDirections
     , Signal.map wipeScreen screenWipes.signal
     ]
+
 
 main : Signal Html
 main =

@@ -12385,14 +12385,14 @@ Elm.Main.make = function (_elm) {
             return A2($List._op["::"],point,points);
          }
    });
-   var isValidPoint = F2(function (state,coords) {
+   var isInvalidPoint = F2(function (state,coords) {
       var _p6 = coords;
       var _p8 = _p6._1;
       var _p7 = _p6._0;
-      return _U.cmp(_p7,0) < 0 || (_U.cmp(state.increment * _p7,
-      state.width - state.increment) > 0 || (_U.cmp(_p8,
-      0) < 0 || _U.cmp(state.increment * _p8,
-      state.height - state.increment) > 0));
+      return _U.cmp(_p7,0) < 0 || (_U.cmp(state.increment * (_p7 + 1),
+      state.width) > 0 || (_U.cmp(_p8,
+      0) < 0 || _U.cmp(state.increment * (_p8 + 1),
+      state.height) > 0));
    });
    var State = F5(function (a,b,c,d,e) {
       return {cursor: a,points: b,width: c,height: d,increment: e};
@@ -12418,7 +12418,9 @@ Elm.Main.make = function (_elm) {
             default: return A2(Coords,_p11 + 1,_p12);}
       }();
       var points$ = A2(insertPoint,state.cursor,state.points);
-      return A2(isValidPoint,state,cursor$) ? state : _U.update(state,
+      return A2(isInvalidPoint,
+      state,
+      cursor$) ? state : _U.update(state,
       {cursor: cursor$,points: points$});
    });
    var Right = {ctor: "Right"};
@@ -12456,7 +12458,7 @@ Elm.Main.make = function (_elm) {
                              ,Coords: Coords
                              ,State: State
                              ,initState: initState
-                             ,isValidPoint: isValidPoint
+                             ,isInvalidPoint: isInvalidPoint
                              ,insertPoint: insertPoint
                              ,moveCursor: moveCursor
                              ,wipeScreen: wipeScreen
