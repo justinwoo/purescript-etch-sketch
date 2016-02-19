@@ -4,8 +4,7 @@ import Prelude (class Eq, Unit, ($), (<>), bind, show, map, (*), (++), (+), (-),
 import Control.Bind ((=<<))
 import Control.Monad.Eff (Eff)
 import Data.Array as Array
-import Data.Foldable (mconcat)
-import Data.Maybe (Maybe(Nothing, Just))
+import Data.Foldable (mconcat, elem)
 import DOM (DOM)
 import Pux.App (app, Update())
 import Pux.DOM (VirtualDOM(), (!))
@@ -55,9 +54,9 @@ isInvalidPoint state (Coords x y) =
 
 insertPoint :: Coords -> Array Coords -> Array Coords
 insertPoint point points =
-  case Array.elemIndex point points of
-    Just _ -> points
-    Nothing -> Array.cons point points
+  case elem point points of
+    true -> points
+    false -> Array.cons point points
 
 moveCursor :: Direction -> State -> State
 moveCursor direction state =

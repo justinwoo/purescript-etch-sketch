@@ -7724,7 +7724,6 @@ var Control_Bind = require("Control.Bind");
 var Control_Monad_Eff = require("Control.Monad.Eff");
 var Data_Array = require("Data.Array");
 var Data_Foldable = require("Data.Foldable");
-var Data_Maybe = require("Data.Maybe");
 var DOM = require("DOM");
 var Pux_App = require("Pux.App");
 var Pux_DOM = require("Pux.DOM");
@@ -7837,14 +7836,14 @@ var eqCoords = new Prelude.Eq(function (v) {
 });
 var insertPoint = function insertPoint(point) {
     return function (points) {
-        var $22 = Data_Array.elemIndex(eqCoords)(point)(points);
-        if ($22 instanceof Data_Maybe.Just) {
+        var $22 = Data_Foldable.elem(Data_Foldable.foldableArray)(eqCoords)(point)(points);
+        if ($22) {
             return points;
         };
-        if ($22 instanceof Data_Maybe.Nothing) {
+        if (!$22) {
             return Data_Array.cons(point)(points);
         };
-        throw new Error("Failed pattern match at Main line 56, column 1 - line 57, column 1: " + [$22.constructor.name]);
+        throw new Error("Failed pattern match at Main line 55, column 1 - line 56, column 1: " + [$22.constructor.name]);
     };
 };
 var moveCursor = function moveCursor(direction) {
@@ -7863,24 +7862,24 @@ var moveCursor = function moveCursor(direction) {
             if (direction instanceof Right) {
                 return new Coords(state.cursor.value0 + 1 | 0, state.cursor.value1);
             };
-            throw new Error("Failed pattern match at Main line 67, column 11 - line 73, column 7: " + [direction.constructor.name]);
+            throw new Error("Failed pattern match at Main line 66, column 11 - line 72, column 7: " + [direction.constructor.name]);
         }();
-        var $26 = isInvalidPoint(state)(cursor$prime);
-        if ($26) {
+        var $25 = isInvalidPoint(state)(cursor$prime);
+        if ($25) {
             return state;
         };
-        if (!$26) {
-            var $27 = {};
-            for (var $28 in state) {
-                if (state.hasOwnProperty($28)) {
-                    $27[$28] = state[$28];
+        if (!$25) {
+            var $26 = {};
+            for (var $27 in state) {
+                if (state.hasOwnProperty($27)) {
+                    $26[$27] = state[$27];
                 };
             };
-            $27.cursor = cursor$prime;
-            $27.points = points$prime;
-            return $27;
+            $26.cursor = cursor$prime;
+            $26.points = points$prime;
+            return $26;
         };
-        throw new Error("Failed pattern match at Main line 62, column 1 - line 63, column 1: " + [$26.constructor.name]);
+        throw new Error("Failed pattern match at Main line 61, column 1 - line 62, column 1: " + [$25.constructor.name]);
     };
 };
 var update = function update(v) {
@@ -7895,14 +7894,14 @@ var update = function update(v) {
             if (v instanceof ClearScreen) {
                 return {
                     state: function () {
-                        var $35 = {};
-                        for (var $36 in state) {
-                            if (state.hasOwnProperty($36)) {
-                                $35[$36] = state[$36];
+                        var $34 = {};
+                        for (var $35 in state) {
+                            if (state.hasOwnProperty($35)) {
+                                $34[$35] = state[$35];
                             };
                         };
-                        $35.points = [];
-                        return $35;
+                        $34.points = [];
+                        return $34;
                     }(),
                     effects: []
                 };
@@ -7913,7 +7912,7 @@ var update = function update(v) {
                     effects: []
                 };
             };
-            throw new Error("Failed pattern match at Main line 77, column 1 - line 78, column 1: " + [v.constructor.name, state.constructor.name, input.constructor.name]);
+            throw new Error("Failed pattern match at Main line 76, column 1 - line 77, column 1: " + [v.constructor.name, state.constructor.name, input.constructor.name]);
         };
     };
 };
@@ -7949,7 +7948,7 @@ module.exports = {
     keydownP: $foreign.keydownP
 };
 
-},{"./foreign":"/Users/jwoo/Code/purescript-etch-sketch/output/Main/foreign.js","Control.Bind":"/Users/jwoo/Code/purescript-etch-sketch/output/Control.Bind/index.js","Control.Monad.Eff":"/Users/jwoo/Code/purescript-etch-sketch/output/Control.Monad.Eff/index.js","DOM":"/Users/jwoo/Code/purescript-etch-sketch/output/DOM/index.js","Data.Array":"/Users/jwoo/Code/purescript-etch-sketch/output/Data.Array/index.js","Data.Foldable":"/Users/jwoo/Code/purescript-etch-sketch/output/Data.Foldable/index.js","Data.Maybe":"/Users/jwoo/Code/purescript-etch-sketch/output/Data.Maybe/index.js","Prelude":"/Users/jwoo/Code/purescript-etch-sketch/output/Prelude/index.js","Pux.App":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.App/index.js","Pux.DOM":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.DOM/index.js","Pux.DOM.HTML.Attributes":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.DOM.HTML.Attributes/index.js","Pux.DOM.HTML.Elements":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.DOM.HTML.Elements/index.js","Pux.React":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.React/index.js","Pux.Render.DOM":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.Render.DOM/index.js","Signal":"/Users/jwoo/Code/purescript-etch-sketch/output/Signal/index.js","Signal.Channel":"/Users/jwoo/Code/purescript-etch-sketch/output/Signal.Channel/index.js"}],"/Users/jwoo/Code/purescript-etch-sketch/output/Math/foreign.js":[function(require,module,exports){
+},{"./foreign":"/Users/jwoo/Code/purescript-etch-sketch/output/Main/foreign.js","Control.Bind":"/Users/jwoo/Code/purescript-etch-sketch/output/Control.Bind/index.js","Control.Monad.Eff":"/Users/jwoo/Code/purescript-etch-sketch/output/Control.Monad.Eff/index.js","DOM":"/Users/jwoo/Code/purescript-etch-sketch/output/DOM/index.js","Data.Array":"/Users/jwoo/Code/purescript-etch-sketch/output/Data.Array/index.js","Data.Foldable":"/Users/jwoo/Code/purescript-etch-sketch/output/Data.Foldable/index.js","Prelude":"/Users/jwoo/Code/purescript-etch-sketch/output/Prelude/index.js","Pux.App":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.App/index.js","Pux.DOM":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.DOM/index.js","Pux.DOM.HTML.Attributes":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.DOM.HTML.Attributes/index.js","Pux.DOM.HTML.Elements":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.DOM.HTML.Elements/index.js","Pux.React":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.React/index.js","Pux.Render.DOM":"/Users/jwoo/Code/purescript-etch-sketch/output/Pux.Render.DOM/index.js","Signal":"/Users/jwoo/Code/purescript-etch-sketch/output/Signal/index.js","Signal.Channel":"/Users/jwoo/Code/purescript-etch-sketch/output/Signal.Channel/index.js"}],"/Users/jwoo/Code/purescript-etch-sketch/output/Math/foreign.js":[function(require,module,exports){
 /* global exports */
 "use strict";
 
@@ -9275,49 +9274,21 @@ var Pux_DOM = require("Pux.DOM");
 var Pux_React = require("Pux.React");
 var Pux_React_Types = require("Pux.React.Types");
 var Signal_Channel = require("Signal.Channel");
-var y2 = Pux_React.makeAttr("y2");
-var y1 = Pux_React.makeAttr("y1");
-var y = Pux_React.makeAttr("y");
-var xmlSpace = Pux_React.makeAttr("xmlSpace");
-var xmlLang = Pux_React.makeAttr("xmlLang");
-var xmlBase = Pux_React.makeAttr("xmlBase");
-var xlinkType = Pux_React.makeAttr("xlinkType");
-var xlinkTitle = Pux_React.makeAttr("xlinkTitle");
-var xlinkShow = Pux_React.makeAttr("xlinkShow");
-var xlinkRole = Pux_React.makeAttr("xlinkRole");
-var xlinkHref = Pux_React.makeAttr("xlinkHref");
-var xlinkArcrole = Pux_React.makeAttr("xlinkArcrole");
-var xlinkActuate = Pux_React.makeAttr("xlinkActuate");
-var x2 = Pux_React.makeAttr("x2");
-var x1 = Pux_React.makeAttr("x1");
-var x = Pux_React.makeAttr("x");
 var wmode = Pux_React.makeAttr("wmode");
 var width = Pux_React.makeAttr("width");
-var viewBox = Pux_React.makeAttr("viewBox");
-var version = Pux_React.makeAttr("version");
 var value = Pux_React.makeAttr("value");
 var useMap = Pux_React.makeAttr("useMap");
 var type_ = Pux_React.makeAttr("type");
-var transform = Pux_React.makeAttr("transform");
 var title = Pux_React.makeAttr("title");
-var textAnchor = Pux_React.makeAttr("textAnchor");
 var target = Pux_React.makeAttr("target");
 var tabIndex = Pux_React.makeAttr("tabIndex");
 var style = Pux_React.makeAttrWithObj("style");
-var strokeWidth = Pux_React.makeAttr("strokeWidth");
-var strokeOpacity = Pux_React.makeAttr("strokeOpacity");
-var strokeLinecap = Pux_React.makeAttr("strokeLinecap");
-var strokeDasharray = Pux_React.makeAttr("strokeDasharray");
-var stroke = Pux_React.makeAttr("stroke");
 var stopPropagation = Pux_DOM.Handler.create(Data_List.Nil.value)(Data_List.singleton(Pux_React.stopPropagationFF));
-var stopOpacity = Pux_React.makeAttr("stopOpacity");
-var stopColor = Pux_React.makeAttr("stopColor");
 var step = Pux_React.makeAttr("step");
 var start = Pux_React.makeAttr("start");
 var srcSet = Pux_React.makeAttr("srcSet");
 var srcDoc = Pux_React.makeAttr("srcDoc");
 var src = Pux_React.makeAttr("src");
-var spreadMethod = Pux_React.makeAttr("spreadMethod");
 var spellCheck = Pux_React.makeAttr("spellCheck");
 var span_ = Pux_React.makeAttr("span");
 var sizes = Pux_React.makeAttr("sizes");
@@ -9331,8 +9302,6 @@ var seamless = Pux_React.makeAttr("seamless");
 var scrolling = Pux_React.makeAttr("scrolling");
 var scope = Pux_React.makeAttr("scope");
 var sandbox = Pux_React.makeAttr("sandbox");
-var ry = Pux_React.makeAttr("ry");
-var rx = Pux_React.makeAttr("rx");
 var rows = Pux_React.makeAttr("rows");
 var rowSpan = Pux_React.makeAttr("rowSpan");
 var role = Pux_React.makeAttr("role");
@@ -9340,18 +9309,12 @@ var required = Pux_React.makeAttr("required");
 var rel = Pux_React.makeAttr("rel");
 var readOnly = Pux_React.makeAttr("readOnly");
 var radioGroup = Pux_React.makeAttr("radioGroup");
-var r = Pux_React.makeAttr("r");
 var preventDefault = Pux_DOM.Handler.create(Data_List.Nil.value)(Data_List.singleton(Pux_React.preventDefaultFF));
-var preserveAspectRatio = Pux_React.makeAttr("preserveAspectRatio");
 var preload = Pux_React.makeAttr("preload");
 var poster = Pux_React.makeAttr("poster");
-var points = Pux_React.makeAttr("points");
 var placeholder = Pux_React.makeAttr("placeholder");
-var patternUnits = Pux_React.makeAttr("patternUnits");
-var patternContentUnits = Pux_React.makeAttr("patternContentUnits");
 var pattern = Pux_React.makeAttr("pattern");
 var open = Pux_React.makeAttr("open");
-var opacity = Pux_React.makeAttr("opacity");
 var onWheel = function onWheel(v) {
     return Pux_React.makeHandler("onWheel")(v.value1)(function (ev) {
         return v.value0;
@@ -9542,7 +9505,6 @@ var onBlur = function onBlur(v) {
         return v.value0;
     });
 };
-var offset = Pux_React.makeAttr("offset");
 var noValidate = Pux_React.makeAttr("noValidate");
 var name = Pux_React.makeAttr("name");
 var muted = Pux_React.makeAttr("muted");
@@ -9553,9 +9515,6 @@ var mediaGroup = Pux_React.makeAttr("mediaGroup");
 var media = Pux_React.makeAttr("media");
 var maxLength = Pux_React.makeAttr("maxLength");
 var max = Pux_React.makeAttr("max");
-var markerStart = Pux_React.makeAttr("markerStart");
-var markerMid = Pux_React.makeAttr("markerMid");
-var markerEnd = Pux_React.makeAttr("markerEnd");
 var marginWidth = Pux_React.makeAttr("marginWidth");
 var marginHeight = Pux_React.makeAttr("marginHeight");
 var manifest = Pux_React.makeAttr("manifest");
@@ -9572,10 +9531,6 @@ var hrefLang = Pux_React.makeAttr("hrefLang");
 var href = Pux_React.makeAttr("href");
 var hidden = Pux_React.makeAttr("hidden");
 var height = Pux_React.makeAttr("height");
-var gradientUnits = Pux_React.makeAttr("gradientUnits");
-var gradientTransform = Pux_React.makeAttr("gradientTransform");
-var fy = Pux_React.makeAttr("fy");
-var fx = Pux_React.makeAttr("effects");
 var frameBorder = Pux_React.makeAttr("frameBorder");
 var formTarget = Pux_React.makeAttr("formTarget");
 var formNoValidate = Pux_React.makeAttr("formNoValidate");
@@ -9583,13 +9538,7 @@ var formMethod = Pux_React.makeAttr("formMethod");
 var formEncType = Pux_React.makeAttr("formEncType");
 var formAction = Pux_React.makeAttr("formAction");
 var form = Pux_React.makeAttr("form");
-var fontSize = Pux_React.makeAttr("fontSize");
-var fontFamily = Pux_React.makeAttr("fontFamily");
-var fillOpacity = Pux_React.makeAttr("fillOpacity");
-var fill = Pux_React.makeAttr("fill");
 var encType = Pux_React.makeAttr("encType");
-var dy = Pux_React.makeAttr("dy");
-var dx = Pux_React.makeAttr("dx");
 var draggable = Pux_React.makeAttr("draggable");
 var download = Pux_React.makeAttr("download");
 var disabled = Pux_React.makeAttr("disabled");
@@ -9598,9 +9547,6 @@ var defer = Pux_React.makeAttr("defer");
 var dateTime = Pux_React.makeAttr("dateTime");
 var data_ = Pux_React.makeAttrWithObj("data");
 var dangerouslySetInnerHTML = Pux_React.makeAttr("dangerouslySetInnerHTML");
-var d = Pux_React.makeAttr("d");
-var cy = Pux_React.makeAttr("cy");
-var cx = Pux_React.makeAttr("cx");
 var crossOrigin = Pux_React.makeAttr("crossOrigin");
 var coords = Pux_React.makeAttr("coords");
 var controls = Pux_React.makeAttr("controls");
@@ -9609,7 +9555,6 @@ var contentEditable = Pux_React.makeAttr("contentEditable");
 var content = Pux_React.makeAttr("content");
 var cols = Pux_React.makeAttr("cols");
 var colSpan = Pux_React.makeAttr("colSpan");
-var clipPath = Pux_React.makeAttr("clipPath");
 var className = Pux_React.makeAttr("className");
 var classID = Pux_React.makeAttr("classID");
 var checked = Pux_React.makeAttr("checked");
@@ -9629,60 +9574,6 @@ var accessKey = Pux_React.makeAttr("accessKey");
 var acceptCharset = Pux_React.makeAttr("acceptCharset");
 var accept = Pux_React.makeAttr("accept");
 module.exports = {
-    y: y,
-    y2: y2,
-    y1: y1,
-    xmlSpace: xmlSpace,
-    xmlLang: xmlLang,
-    xmlBase: xmlBase,
-    xlinkType: xlinkType,
-    xlinkTitle: xlinkTitle,
-    xlinkShow: xlinkShow,
-    xlinkRole: xlinkRole,
-    xlinkHref: xlinkHref,
-    xlinkArcrole: xlinkArcrole,
-    xlinkActuate: xlinkActuate,
-    x: x,
-    x2: x2,
-    x1: x1,
-    viewBox: viewBox,
-    version: version,
-    transform: transform,
-    textAnchor: textAnchor,
-    strokeWidth: strokeWidth,
-    strokeOpacity: strokeOpacity,
-    strokeLinecap: strokeLinecap,
-    strokeDasharray: strokeDasharray,
-    stroke: stroke,
-    stopOpacity: stopOpacity,
-    stopColor: stopColor,
-    spreadMethod: spreadMethod,
-    ry: ry,
-    rx: rx,
-    r: r,
-    preserveAspectRatio: preserveAspectRatio,
-    points: points,
-    patternUnits: patternUnits,
-    patternContentUnits: patternContentUnits,
-    opacity: opacity,
-    offset: offset,
-    markerStart: markerStart,
-    markerMid: markerMid,
-    markerEnd: markerEnd,
-    gradientUnits: gradientUnits,
-    gradientTransform: gradientTransform,
-    fy: fy,
-    fx: fx,
-    fontSize: fontSize,
-    fontFamily: fontFamily,
-    fillOpacity: fillOpacity,
-    fill: fill,
-    dy: dy,
-    dx: dx,
-    d: d,
-    cy: cy,
-    cx: cx,
-    clipPath: clipPath,
     wmode: wmode,
     width: width,
     value: value,
@@ -9841,12 +9732,10 @@ var parent = function parent(el) {
         return new Pux_DOM.Node(el, new Data_Maybe.Just(children), [], [], new Pux_DOM.Return(Prelude.unit));
     };
 };
-var pattern = parent("pattern");
 var picture = parent("picture");
 var pre = parent("pre");
 var progress = parent("progress");
 var q = parent("q");
-var radialGradient = parent("radialGradient");
 var rp = parent("rp");
 var rt = parent("rt");
 var ruby = parent("ruby");
@@ -9862,11 +9751,9 @@ var style = parent("style");
 var sub = parent("sub");
 var summary = parent("summary");
 var sup = parent("sup");
-var svg = parent("svg");
 var table = parent("table");
 var tbody = parent("tbody");
 var td = parent("td");
-var text$prime = parent("text");
 var textarea = parent("textarea");
 var tfoot = parent("tfoot");
 var th = parent("th");
@@ -9874,7 +9761,6 @@ var thead = parent("thead");
 var time = parent("time");
 var title = parent("title");
 var tr = parent("tr");
-var tspan = parent("tspan");
 var u = parent("u");
 var ul = parent("ul");
 var $$var = parent("var");
@@ -9889,27 +9775,19 @@ var noscript = parent("noscript");
 var nav = parent("nav");
 var meter = parent("meter");
 var menu = parent("menu");
-var mask = parent("mask");
 var mark = parent("mark");
 var map = parent("map");
 var main = parent("main");
-var linearGradient = parent("linearGradient");
 var li = parent("li");
 var legend = parent("legend");
 var leaf = function leaf(el) {
     return new Pux_DOM.Node(el, Data_Maybe.Nothing.value, [], [], new Pux_DOM.Return(Prelude.unit));
 };
-var line = leaf("line");
 var link = leaf("link");
 var menuitem = leaf("menuitem");
 var meta = leaf("meta");
 var param = leaf("param");
-var path = leaf("path");
-var polygon = leaf("polygon");
-var polyline = leaf("polyline");
-var rect = leaf("rect");
 var source = leaf("source");
-var stop = leaf("stop");
 var track = leaf("track");
 var wbr = leaf("body");
 var label = parent("label");
@@ -9918,7 +9796,6 @@ var kbd = parent("kbd");
 var ins = parent("ins");
 var input = leaf("input");
 var img = leaf("img");
-var image = leaf("image");
 var iframe = parent("iframe");
 var i = parent("i");
 var html = parent("html");
@@ -9931,7 +9808,6 @@ var h4 = parent("h4");
 var h3 = parent("h3");
 var h2 = parent("h2");
 var h1 = parent("h1");
-var g = parent("g");
 var form = parent("form");
 var footer = parent("footer");
 var figure = parent("figure");
@@ -9939,7 +9815,6 @@ var figcaption = parent("figcaption");
 var fieldset = parent("fieldset");
 var embed = leaf("embed");
 var em = parent("em");
-var ellipse = leaf("ellipse");
 var dt = parent("dt");
 var dl = parent("dl");
 var div = parent("div");
@@ -9947,16 +9822,13 @@ var dialog = parent("dialog");
 var dfn = parent("dfn");
 var details = parent("details");
 var del = parent("del");
-var defs = parent("defs");
 var dd = parent("dd");
 var datalist = parent("datalist");
 var data_ = parent("data");
 var colgroup = parent("colgroup");
 var col = leaf("col");
 var code = parent("code");
-var clipPath = parent("clipPath");
 var cite = parent("cite");
-var circle = leaf("circle");
 var caption = parent("caption");
 var canvas = parent("canvas");
 var button = parent("button");
@@ -9976,25 +9848,6 @@ var address = parent("address");
 var abbr = parent("abbr");
 var a = parent("a");
 module.exports = {
-    tspan: tspan,
-    "text'": text$prime,
-    svg: svg,
-    stop: stop,
-    rect: rect,
-    radialGradient: radialGradient,
-    polyline: polyline,
-    polygon: polygon,
-    pattern: pattern,
-    path: path,
-    mask: mask,
-    linearGradient: linearGradient,
-    line: line,
-    image: image,
-    g: g,
-    ellipse: ellipse,
-    defs: defs,
-    clipPath: clipPath,
-    circle: circle,
     wbr: wbr,
     video: video,
     "var": $$var,
