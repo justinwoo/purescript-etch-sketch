@@ -1,17 +1,16 @@
 module Main where
 
-import Prelude (class Eq, Unit, ($), (<>), bind, show, map, (*), (++), (+), (-), (>), (||), (<), (==), (&&))
-import Control.Bind ((=<<))
-import Control.Monad.Eff (Eff)
+import Prelude
 import Data.Array as Array
-import Data.Foldable (mconcat, elem)
+import Control.Monad.Eff (Eff)
+import Control.Monad.Eff.Exception (EXCEPTION)
 import DOM (DOM)
-import Pux.App (app, Update())
-import Pux.DOM (VirtualDOM(), (!))
-import Pux.DOM.HTML.Elements as E
-import Pux.DOM.HTML.Attributes as A
-import Pux.React (makeAttr)
-import Pux.Render.DOM (renderToDOM)
+import Data.Foldable (elem)
+import Data.Array (snoc)
+import Pux (start, fromSimple, renderToDOM)
+import Pux.Html (Html, div, text, button, svg, rect)
+import Pux.Html.Attributes (height, width, style, key)
+import Pux.Html.Events (onClick)
 import Signal (Signal, constant, (<~))
 import Signal.Channel (CHANNEL)
 
@@ -38,8 +37,8 @@ type State =
   , increment :: Int
   }
 
-initState :: State
-initState =
+initialState :: State
+initialState =
   { cursor: Coords 0 0
   , points: []
   , width: 800
@@ -73,45 +72,50 @@ moveCursor direction state =
         then state
         else state {cursor = cursor', points = points'}
 
-update :: forall eff. Update (eff) State Action
-update (MoveCursor direction) state input =
-  { state: moveCursor direction state
-  , effects: []
-  }
-update ClearScreen state input =
-  { state: state {points = []}
-  , effects: []
-  }
-update NoOp state input =
-  { state: state
-  , effects: []
-  }
+update :: Action -> State -> State
+update (MoveCursor direction) state =
+  moveCursor direction state
+update ClearScreen state =
+  state { points = [] }
+update NoOp state =
+  state
 
-pointView :: Int -> String -> Coords -> VirtualDOM
+pointView :: Int -> String -> Coords -> Html Action
 pointView increment subkey (Coords x y) =
-  E.leaf "rect"
-    ! A.key (subkey ++ show x ++ "," ++ show y)
-    ! A.width (show increment)
-    ! A.height (show increment)
-    ! makeAttr "x" (show $ x * increment)
-    ! makeAttr "y" (show $ y * increment)
+  rect
+    [ key (subkey ++ show x ++ "," ++ show y)
+    , width (show increment)
+    , height (show increment)
+    , (Pux.Html.Attributes.x (show $ x * increment))
+    , (Pux.Html.Attributes.y (show $ y * increment))
+    ]
+    []
 
-view :: State -> VirtualDOM
+view :: State -> Html Action
 view state =
   let
     pointView' = pointView state.increment
     cursor = pointView' "cursor" state.cursor
     points = map (pointView' "pointView") state.points
   in
-    E.div $ do
-      E.div $
-        E.button ! A.onClick (A.send ClearScreen) $ E.text "Clear"
-      E.div $
-        E.parent "svg"
-          ! A.style { border: "1px solid black" }
-          ! A.width (show state.width)
-          ! A.height (show state.height)
-          $ cursor <> mconcat points
+    div
+      []
+      [ div
+        []
+        [ button
+          [ onClick (const ClearScreen) ]
+          [ text "Clear" ]
+        ]
+      , div
+        []
+        [ svg
+          [ style { border: "1px solid black" }
+          , width (show state.width)
+          , height (show state.height)
+          ]
+          $ snoc points cursor
+        ]
+      ]
 
 foreign import keydownP :: forall e c. (c -> Signal c) -> Eff (dom :: DOM | e) (Signal Int)
 
@@ -127,14 +131,16 @@ keyDirections keyCode =
     39 -> MoveCursor Right
     _ -> NoOp
 
-main :: forall e. Eff (channel :: CHANNEL, dom :: DOM | e) Unit
+main :: forall e. Eff (err :: EXCEPTION, channel :: CHANNEL, dom :: DOM | e) Unit
 main = do
   keydown' <- keydown
-  renderToDOM "#app" =<< app
-    { state: initState
-    , update: update
+  app <- start
+    { initialState: initialState
+    , update: fromSimple update
     , view: view
     , inputs:
-        [ keyDirections <~ keydown'
-        ]
+      [ keyDirections <~ keydown'
+      ]
     }
+
+  renderToDOM "#app" app.html
