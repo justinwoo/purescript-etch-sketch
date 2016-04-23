@@ -2,14 +2,20 @@ module Main where
 
 import Prelude
 import Data.Array as Array
+import CSS (border)
+import CSS.Border (solid)
+import CSS.Color (black)
+import CSS.Size (px)
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Exception (EXCEPTION)
 import DOM (DOM)
+import Data.Array ((:))
 import Data.Foldable (elem)
-import Data.Array (snoc)
+import Data.Int (toNumber)
 import Pux (start, fromSimple, renderToDOM)
+import Pux.CSS (style)
 import Pux.Html (Html, div, text, button, svg, rect)
-import Pux.Html.Attributes (height, width, style, key)
+import Pux.Html.Attributes (height, width, key)
 import Pux.Html.Events (onClick)
 import Signal (Signal, constant, (<~))
 import Signal.Channel (CHANNEL)
@@ -109,11 +115,12 @@ view state =
       , div
         []
         [ svg
-          [ style { border: "1px solid black" }
+          [ style $ do
+            border solid (px (toNumber 1)) black
           , width (show state.width)
           , height (show state.height)
           ]
-          $ snoc points cursor
+          $ cursor : points
         ]
       ]
 

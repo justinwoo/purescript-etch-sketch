@@ -20,6 +20,8 @@
     "purescript-arrays": "^0.4.4",
     "purescript-dom": "^0.2.15",
     "purescript-signal": "^5.0.0",
-    "purescript-pux": "1.0.0"
+    "purescript-css": "^0.6.0",
+    "purescript-pux-css": "^1.0.0",
+    "purescript-pux": "^4.0.0"
   }
 }
