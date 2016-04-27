@@ -32165,21 +32165,21 @@ var initialState = {
     height: 600, 
     increment: 10
 };
-var eqCoords = new Prelude.Eq(function (v) {
-    return function (v1) {
-        return v.value0 === v1.value0 && v.value1 === v1.value1;
+var eqCoords = new Prelude.Eq(function (x) {
+    return function (y) {
+        return x.value0 === y.value0 && x.value1 === y.value1;
     };
 });
 var insertPoint = function (point) {
     return function (points) {
-        var $23 = Data_Foldable.elem(Data_Foldable.foldableArray)(eqCoords)(point)(points);
-        if ($23) {
+        var $27 = Data_Foldable.elem(Data_Foldable.foldableArray)(eqCoords)(point)(points);
+        if ($27) {
             return points;
         };
-        if (!$23) {
+        if (!$27) {
             return Data_Array_1.cons(point)(points);
         };
-        throw new Error("Failed pattern match at Main line 62, column 3 - line 66, column 1: " + [ $23.constructor.name ]);
+        throw new Error("Failed pattern match at Main line 63, column 3 - line 67, column 1: " + [ $27.constructor.name ]);
     };
 };
 var moveCursor = function (direction) {
@@ -32198,24 +32198,24 @@ var moveCursor = function (direction) {
             if (direction instanceof Right) {
                 return new Coords(state.cursor.value0 + 1 | 0, state.cursor.value1);
             };
-            throw new Error("Failed pattern match at Main line 72, column 9 - line 77, column 7: " + [ direction.constructor.name ]);
+            throw new Error("Failed pattern match at Main line 73, column 9 - line 78, column 7: " + [ direction.constructor.name ]);
         })();
-        var $26 = isInvalidPoint(state)(cursor$prime);
-        if ($26) {
+        var $30 = isInvalidPoint(state)(cursor$prime);
+        if ($30) {
             return state;
         };
-        if (!$26) {
-            var $27 = {};
-            for (var $28 in state) {
-                if (state.hasOwnProperty($28)) {
-                    $27[$28] = state[$28];
+        if (!$30) {
+            var $31 = {};
+            for (var $32 in state) {
+                if (state.hasOwnProperty($32)) {
+                    $31[$32] = state[$32];
                 };
             };
-            $27.cursor = cursor$prime;
-            $27.points = points$prime;
-            return $27;
+            $31.cursor = cursor$prime;
+            $31.points = points$prime;
+            return $31;
         };
-        throw new Error("Failed pattern match at Main line 77, column 7 - line 81, column 1: " + [ $26.constructor.name ]);
+        throw new Error("Failed pattern match at Main line 78, column 7 - line 82, column 1: " + [ $30.constructor.name ]);
     };
 };
 var update = function (v) {
@@ -32224,19 +32224,19 @@ var update = function (v) {
             return moveCursor(v.value0)(state);
         };
         if (v instanceof ClearScreen) {
-            var $34 = {};
-            for (var $35 in state) {
-                if (state.hasOwnProperty($35)) {
-                    $34[$35] = state[$35];
+            var $38 = {};
+            for (var $39 in state) {
+                if (state.hasOwnProperty($39)) {
+                    $38[$39] = state[$39];
                 };
             };
-            $34.points = [  ];
-            return $34;
+            $38.points = [  ];
+            return $38;
         };
         if (v instanceof NoOp) {
             return state;
         };
-        throw new Error("Failed pattern match at Main line 82, column 1 - line 84, column 1: " + [ v.constructor.name, state.constructor.name ]);
+        throw new Error("Failed pattern match at Main line 83, column 1 - line 85, column 1: " + [ v.constructor.name, state.constructor.name ]);
     };
 };
 var main = function __do() {

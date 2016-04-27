@@ -1,6 +1,6 @@
 module Main where
 
-import Prelude
+import Prelude hiding (div)
 import Data.Array as Array
 import CSS (border)
 import CSS.Border (solid)
@@ -27,8 +27,9 @@ data Direction
   | Right
 
 data Coords = Coords Int Int
-instance eqCoords :: Eq Coords where
-  eq (Coords ax ay) (Coords bx by) = ax == bx && ay == by
+derive instance eqCoords :: Eq Coords
+-- instance eqCoords :: Eq Coords where
+--   eq (Coords ax ay) (Coords bx by) = ax == bx && ay == by
 
 data Action
   = MoveCursor Direction
