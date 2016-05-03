@@ -1,7 +1,6 @@
 module Main where
 
 import Prelude hiding (div)
-import Data.Array as Array
 import CSS (border)
 import CSS.Border (solid)
 import CSS.Color (black)
@@ -10,7 +9,6 @@ import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Exception (EXCEPTION)
 import DOM (DOM)
 import Data.Array ((:))
-import Data.Foldable (elem)
 import Data.Int (toNumber)
 import Pux (start, fromSimple, renderToDOM)
 import Pux.CSS (style)
@@ -19,6 +17,14 @@ import Pux.Html.Attributes (height, width, key)
 import Pux.Html.Events (onClick)
 import Signal (Signal, constant, (<~))
 import Signal.Channel (CHANNEL)
+
+foreign import data CrappyHashSet :: * -> *
+foreign import empty :: forall a. CrappyHashSet a
+foreign import insert :: forall a. (CrappyHash a) => a -> CrappyHashSet a -> CrappyHashSet a
+foreign import mapToArray :: forall a b. (a -> b) -> CrappyHashSet a -> Array b
+
+class CrappyHash a where
+  crappyHash :: a -> String
 
 data Direction
   = Up
@@ -30,6 +36,8 @@ data Coords = Coords Int Int
 derive instance eqCoords :: Eq Coords
 -- instance eqCoords :: Eq Coords where
 --   eq (Coords ax ay) (Coords bx by) = ax == bx && ay == by
+instance crappyHashCoords :: CrappyHash Coords where
+  crappyHash (Coords x y) = "x:" ++ (show x) ++ "y:" ++ (show y)
 
 data Action
   = MoveCursor Direction
@@ -38,7 +46,7 @@ data Action
 
 type State =
   { cursor :: Coords
-  , points :: Array Coords
+  , points :: CrappyHashSet Coords
   , width :: Int
   , height :: Int
   , increment :: Int
@@ -47,7 +55,7 @@ type State =
 initialState :: State
 initialState =
   { cursor: Coords 0 0
-  , points: []
+  , points: empty
   , width: 800
   , height: 600
   , increment: 10
@@ -58,11 +66,9 @@ isInvalidPoint state (Coords x y) =
   x < 0 || (state.increment * x) > (state.width - state.increment) ||
   y < 0 || (state.increment * y) > (state.height - state.increment)
 
-insertPoint :: Coords -> Array Coords -> Array Coords
+insertPoint :: Coords -> CrappyHashSet Coords -> CrappyHashSet Coords
 insertPoint point points =
-  case elem point points of
-    true -> points
-    false -> Array.cons point points
+  insert point points
 
 moveCursor :: Direction -> State -> State
 moveCursor direction state =
@@ -83,7 +89,7 @@ update :: Action -> State -> State
 update (MoveCursor direction) state =
   moveCursor direction state
 update ClearScreen state =
-  state { points = [] }
+  state { points = empty }
 update NoOp state =
   state
 
@@ -103,7 +109,7 @@ view state =
   let
     pointView' = pointView state.increment
     cursor = pointView' "cursor" state.cursor
-    points = map (pointView' "pointView") state.points
+    points = mapToArray (pointView' "pointView") state.points
   in
     div
       []
