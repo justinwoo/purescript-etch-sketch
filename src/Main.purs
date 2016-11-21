@@ -15,6 +15,7 @@ import Pux (start, fromSimple, renderToDOM)
 import Pux.CSS (style)
 import Pux.Html (Html, div, text, button, svg, rect)
 import Pux.Html.Attributes (height, width, key)
+import Pux.Html.Attributes as HA
 import Pux.Html.Events (onClick)
 import Signal (Signal, constant, (<~))
 import Signal.Channel (CHANNEL)
@@ -68,8 +69,7 @@ moveCursor direction state =
   case state.cursor of
     Coords x y -> do
       let points' = insertPoint state.cursor state.points
-      let cursor' =
-        case direction of
+      let cursor' = case direction of
             Up -> Coords x (y - 1)
             Down -> Coords x (y + 1)
             Left -> Coords (x - 1) y
@@ -89,11 +89,11 @@ update NoOp state =
 pointView :: Int -> String -> Coords -> Html Action
 pointView increment subkey (Coords x y) =
   rect
-    [ key (subkey ++ show x ++ "," ++ show y)
+    [ key (subkey <> show x <> "," <> show y)
     , width (show increment)
     , height (show increment)
-    , (Pux.Html.Attributes.x (show $ x * increment))
-    , (Pux.Html.Attributes.y (show $ y * increment))
+    , (HA.x (show $ x * increment))
+    , (HA.y (show $ y * increment))
     ]
     []
 

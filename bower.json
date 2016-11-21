@@ -11,17 +11,8 @@
     "output"
   ],
   "dependencies": {
-    "purescript-console": "^2.0.0",
-    "purescript-math": "^2.0.0",
-    "bower": "*",
-    "install": "^1.0.4",
-    "purescript-sets": "^2.0.0",
-    "purescript-generics": "^3.1.0",
-    "purescript-arrays": "^3.0.1",
-    "purescript-dom": "^3.2.0",
-    "purescript-signal": "^8.0.0",
-    "purescript-css": "^2.0.0",
+    "purescript-pux": "^7.0.0",
     "purescript-pux-css": "^3.1.0",
-    "purescript-pux": "^7.0.0"
+    "purescript-sets": "^2.0.0"
   }
 }
