@@ -29,8 +29,6 @@ data Direction
 
 data Coords = Coords Int Int
 derive instance eqCoords :: Eq Coords
--- instance eqCoords :: Eq Coords where
---   eq (Coords ax ay) (Coords bx by) = ax == bx && ay == by
 derive instance ordCoords :: Ord Coords
 
 data Action

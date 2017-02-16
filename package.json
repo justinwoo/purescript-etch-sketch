@@ -7,15 +7,15 @@
     "test": "test"
   },
   "scripts": {
-    "start": "pulp -w browserify --watch --to dist/app.js",
+    "start": "pulp -w browserify --to dist/app.js",
     "build": "pulp browserify --to dist/app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "react": "^15.4.0",
-    "react-dom": "^15.4.0"
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
   },
   "devDependencies": {}
 }
