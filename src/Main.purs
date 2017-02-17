@@ -11,7 +11,8 @@ import DOM (DOM)
 import Data.Array ((:))
 import Data.Foldable (foldl)
 import Data.Int (toNumber)
-import Data.Set (Set, empty, insert)
+import Data.Monoid (mempty)
+import Data.Set (Set, insert)
 import Pux (start, fromSimple, renderToDOM)
 import Pux.CSS (style)
 import Pux.Html (Html, div, text, button, svg, rect)
@@ -48,7 +49,7 @@ type State =
 initialState :: State
 initialState =
   { cursor: Coords 0 0
-  , points: empty
+  , points: mempty
   , width: 800
   , height: 600
   , increment: 10
@@ -81,7 +82,7 @@ update :: Action -> State -> State
 update (MoveCursor direction) state =
   moveCursor direction state
 update ClearScreen state =
-  state { points = empty }
+  state { points = mempty }
 update NoOp state =
   state
 

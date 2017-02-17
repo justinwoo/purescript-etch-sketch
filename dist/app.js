@@ -45056,6 +45056,7 @@ var DOM = require("../DOM");
 var Data_Array = require("../Data.Array");
 var Data_Foldable = require("../Data.Foldable");
 var Data_Int = require("../Data.Int");
+var Data_Monoid = require("../Data.Monoid");
 var Data_Set = require("../Data.Set");
 var Pux = require("../Pux");
 var Pux_CSS = require("../Pux.CSS");
@@ -45166,13 +45167,6 @@ var isInvalidPoint = function (state) {
         return v.value0 < 0 || ((state.increment * v.value0 | 0) > (state.width - state.increment | 0) || (v.value1 < 0 || (state.increment * v.value1 | 0) > (state.height - state.increment | 0)));
     };
 };
-var initialState = {
-    cursor: new Coords(0, 0), 
-    points: Data_Set.empty, 
-    width: 800, 
-    height: 600, 
-    increment: 10
-};
 var getKeyDirections = (function () {
     var actions = function (x) {
         return function (v) {
@@ -45182,7 +45176,7 @@ var getKeyDirections = (function () {
             if (!v) {
                 return NoOp.value;
             };
-            throw new Error("Failed pattern match at Main line 136, column 17 - line 138, column 20: " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Main line 137, column 17 - line 139, column 20: " + [ v.constructor.name ]);
         };
     };
     return function __do() {
@@ -45212,6 +45206,13 @@ var ordCoords = new Data_Ord.Ord(function () {
         return Data_Ord.compare(Data_Ord.ordInt)(x.value1)(y.value1);
     };
 });
+var initialState = {
+    cursor: new Coords(0, 0), 
+    points: Data_Monoid.mempty(Data_Set.monoidSet(ordCoords)), 
+    width: 800, 
+    height: 600, 
+    increment: 10
+};
 var insertPoint = function (point) {
     return function (points) {
         return Data_Set.insert(ordCoords)(point)(points);
@@ -45233,7 +45234,7 @@ var moveCursor = function (direction) {
             if (direction instanceof Right) {
                 return new Coords(state.cursor.value0 + 1 | 0, state.cursor.value1);
             };
-            throw new Error("Failed pattern match at Main line 71, column 21 - line 75, column 38: " + [ direction.constructor.name ]);
+            throw new Error("Failed pattern match at Main line 72, column 21 - line 76, column 38: " + [ direction.constructor.name ]);
         })();
         var $53 = isInvalidPoint(state)(cursor$prime);
         if ($53) {
@@ -45250,7 +45251,7 @@ var moveCursor = function (direction) {
             $54.points = points$prime;
             return $54;
         };
-        throw new Error("Failed pattern match at Main line 76, column 7 - line 78, column 56: " + [ $53.constructor.name ]);
+        throw new Error("Failed pattern match at Main line 77, column 7 - line 79, column 56: " + [ $53.constructor.name ]);
     };
 };
 var update = function (v) {
@@ -45265,13 +45266,13 @@ var update = function (v) {
                     $62[$63] = state[$63];
                 };
             };
-            $62.points = Data_Set.empty;
+            $62.points = Data_Monoid.mempty(Data_Set.monoidSet(ordCoords));
             return $62;
         };
         if (v instanceof NoOp) {
             return state;
         };
-        throw new Error("Failed pattern match at Main line 81, column 1 - line 82, column 29: " + [ v.constructor.name, state.constructor.name ]);
+        throw new Error("Failed pattern match at Main line 82, column 1 - line 83, column 29: " + [ v.constructor.name, state.constructor.name ]);
     };
 };
 var main = function __do() {
@@ -45306,7 +45307,7 @@ module.exports = {
     ordCoords: ordCoords
 };
 
-},{"../CSS":209,"../CSS.Border":184,"../CSS.Color":186,"../CSS.Size":200,"../Color":211,"../Control.Applicative":214,"../Control.Bind":220,"../Control.Monad.Eff":244,"../Control.Monad.Eff.Exception":236,"../DOM":265,"../Data.Array":270,"../Data.Eq":287,"../Data.Foldable":292,"../Data.Function":295,"../Data.Functor":299,"../Data.HeytingAlgebra":303,"../Data.Int":308,"../Data.Ord":328,"../Data.Ordering":329,"../Data.Ring":333,"../Data.Semigroup":335,"../Data.Semiring":337,"../Data.Set":338,"../Data.Show":340,"../Prelude":365,"../Pux":375,"../Pux.CSS":366,"../Pux.Html":373,"../Pux.Html.Attributes":368,"../Pux.Html.Elements":370,"../Pux.Html.Events":372,"../Signal":385,"../Signal.Channel":379,"../Signal.DOM":381}],359:[function(require,module,exports){
+},{"../CSS":209,"../CSS.Border":184,"../CSS.Color":186,"../CSS.Size":200,"../Color":211,"../Control.Applicative":214,"../Control.Bind":220,"../Control.Monad.Eff":244,"../Control.Monad.Eff.Exception":236,"../DOM":265,"../Data.Array":270,"../Data.Eq":287,"../Data.Foldable":292,"../Data.Function":295,"../Data.Functor":299,"../Data.HeytingAlgebra":303,"../Data.Int":308,"../Data.Monoid":321,"../Data.Ord":328,"../Data.Ordering":329,"../Data.Ring":333,"../Data.Semigroup":335,"../Data.Semiring":337,"../Data.Set":338,"../Data.Show":340,"../Prelude":365,"../Pux":375,"../Pux.CSS":366,"../Pux.Html":373,"../Pux.Html.Attributes":368,"../Pux.Html.Elements":370,"../Pux.Html.Events":372,"../Signal":385,"../Signal.Channel":379,"../Signal.DOM":381}],359:[function(require,module,exports){
 "use strict";
 
 // module Math
