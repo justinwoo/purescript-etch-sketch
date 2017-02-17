@@ -1,5 +1,6 @@
 module Main where
 
+import Pux.Html.Attributes as HA
 import CSS (border)
 import CSS.Border (solid)
 import CSS.Color (black)
@@ -14,11 +15,11 @@ import Data.Set (Set, empty, insert)
 import Pux (start, fromSimple, renderToDOM)
 import Pux.CSS (style)
 import Pux.Html (Html, div, text, button, svg, rect)
-import Pux.Html.Attributes (height, width, key)
-import Pux.Html.Attributes as HA
+import Pux.Html.Attributes (height, key, width)
 import Pux.Html.Events (onClick)
-import Signal (Signal, constant, (<~))
+import Signal (Signal)
 import Signal.Channel (CHANNEL)
+import Signal.DOM (keyPressed)
 import Prelude hiding (div)
 
 data Direction
@@ -124,29 +125,28 @@ view state =
         ]
       ]
 
-foreign import keydownP :: forall e c. (c -> Signal c) -> Eff (dom :: DOM | e) (Signal Int)
+getKeyDirections :: forall e. Eff (dom :: DOM | e) (Signal Action)
+getKeyDirections = do
+  ups <- map (actions $ MoveCursor Up) <$> keyPressed 38
+  downs <- map (actions $ MoveCursor Down) <$> keyPressed 40
+  lefts <- map (actions $ MoveCursor Left) <$> keyPressed 37
+  rights <- map (actions $ MoveCursor Right) <$> keyPressed 39
+  pure $ ups <> downs <> lefts <> rights
+  where
+    actions x = case _ of
+      true -> x
+      false -> NoOp
 
-keydown :: forall e. Eff (dom :: DOM | e) (Signal Int)
-keydown = keydownP constant
-
-keyDirections :: Int -> Action
-keyDirections keyCode =
-  case keyCode of
-    38 -> MoveCursor Up
-    40 -> MoveCursor Down
-    37 -> MoveCursor Left
-    39 -> MoveCursor Right
-    _ -> NoOp
 
 main :: forall e. Eff (err :: EXCEPTION, channel :: CHANNEL, dom :: DOM | e) Unit
 main = do
-  keydown' <- keydown
+  keyDirections <- getKeyDirections
   app <- start
-    { initialState: initialState
+    { initialState
     , update: fromSimple update
-    , view: view
+    , view
     , inputs:
-      [ keyDirections <~ keydown'
+      [ keyDirections
       ]
     }
 
