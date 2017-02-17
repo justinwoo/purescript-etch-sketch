@@ -134,10 +134,7 @@ getKeyDirections = do
   rights <- map (actions $ MoveCursor Right) <$> keyPressed 39
   pure $ ups <> downs <> lefts <> rights
   where
-    actions x = case _ of
-      true -> x
-      false -> NoOp
-
+    actions x = if _ then x else NoOp
 
 main :: forall e. Eff (err :: EXCEPTION, channel :: CHANNEL, dom :: DOM | e) Unit
 main = do
