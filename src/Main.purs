@@ -104,7 +104,7 @@ view state =
     cursor = pointView' "cursor" state.cursor
     pointView'' = pointView' "pointView"
     foldPoints b a = (pointView'' a) : b
-    points = foldl foldPoints [] state.points
+    points = foldl foldPoints mempty state.points
   in
     div
       []

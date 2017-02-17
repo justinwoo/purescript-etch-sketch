@@ -45158,7 +45158,7 @@ var view = function (state) {
             return Data_Array.cons(pointView$prime$prime(a))(b);
         };
     };
-    var points = Data_Foldable.foldl(Data_Set.foldableSet)(foldPoints)([  ])(state.points);
+    var points = Data_Foldable.foldl(Data_Set.foldableSet)(foldPoints)(Data_Monoid.mempty(Data_Monoid.monoidArray))(state.points);
     var cursor = pointView$prime("cursor")(state.cursor);
     return Pux_Html_Elements.div([  ])([ Pux_Html_Elements.div([  ])([ Pux_Html_Elements.button([ Pux_Html_Events.onClick(Data_Function["const"](ClearScreen.value)) ])([ Pux_Html_Elements.text("Clear") ]) ]), Pux_Html_Elements.div([  ])([ Pux_Html_Elements.svg([ Pux_CSS.style(CSS_Border.border(CSS_Border.solid)(CSS_Size.px(Data_Int.toNumber(1)))(Color.black)), Pux_Html_Attributes.width(Data_Show.show(Data_Show.showInt)(state.width)), Pux_Html_Attributes.height(Data_Show.show(Data_Show.showInt)(state.height)) ])(Data_Array.cons(cursor)(points)) ]) ]);
 };
