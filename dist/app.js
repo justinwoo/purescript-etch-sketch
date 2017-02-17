@@ -45054,7 +45054,6 @@ var Control_Monad_Eff = require("../Control.Monad.Eff");
 var Control_Monad_Eff_Exception = require("../Control.Monad.Eff.Exception");
 var DOM = require("../DOM");
 var Data_Array = require("../Data.Array");
-var Data_Foldable = require("../Data.Foldable");
 var Data_Int = require("../Data.Int");
 var Data_Monoid = require("../Data.Monoid");
 var Data_Set = require("../Data.Set");
@@ -45075,10 +45074,10 @@ var Data_Semigroup = require("../Data.Semigroup");
 var Data_Show = require("../Data.Show");
 var Data_Function = require("../Data.Function");
 var Data_Semiring = require("../Data.Semiring");
+var Data_Functor = require("../Data.Functor");
 var Color = require("../Color");
 var Data_Ring = require("../Data.Ring");
 var Control_Bind = require("../Control.Bind");
-var Data_Functor = require("../Data.Functor");
 var Control_Applicative = require("../Control.Applicative");
 var Up = (function () {
     function Up() {
@@ -45153,12 +45152,7 @@ var pointView = function (increment) {
 var view = function (state) {
     var pointView$prime = pointView(state.increment);
     var pointView$prime$prime = pointView$prime("pointView");
-    var foldPoints = function (b) {
-        return function (a) {
-            return Data_Array.cons(pointView$prime$prime(a))(b);
-        };
-    };
-    var points = Data_Foldable.foldl(Data_Set.foldableSet)(foldPoints)(Data_Monoid.mempty(Data_Monoid.monoidArray))(state.points);
+    var points = Data_Functor.map(Data_Functor.functorArray)(pointView$prime$prime)(Data_Array.fromFoldable(Data_Set.foldableSet)(state.points));
     var cursor = pointView$prime("cursor")(state.cursor);
     return Pux_Html_Elements.div([  ])([ Pux_Html_Elements.div([  ])([ Pux_Html_Elements.button([ Pux_Html_Events.onClick(Data_Function["const"](ClearScreen.value)) ])([ Pux_Html_Elements.text("Clear") ]) ]), Pux_Html_Elements.div([  ])([ Pux_Html_Elements.svg([ Pux_CSS.style(CSS_Border.border(CSS_Border.solid)(CSS_Size.px(Data_Int.toNumber(1)))(Color.black)), Pux_Html_Attributes.width(Data_Show.show(Data_Show.showInt)(state.width)), Pux_Html_Attributes.height(Data_Show.show(Data_Show.showInt)(state.height)) ])(Data_Array.cons(cursor)(points)) ]) ]);
 };
@@ -45176,7 +45170,7 @@ var getKeyDirections = (function () {
             if (!v) {
                 return NoOp.value;
             };
-            throw new Error("Failed pattern match at Main line 137, column 17 - line 137, column 38: " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Main line 135, column 17 - line 135, column 38: " + [ v.constructor.name ]);
         };
     };
     return function __do() {
@@ -45234,7 +45228,7 @@ var moveCursor = function (direction) {
             if (direction instanceof Right) {
                 return new Coords(state.cursor.value0 + 1 | 0, state.cursor.value1);
             };
-            throw new Error("Failed pattern match at Main line 72, column 21 - line 76, column 38: " + [ direction.constructor.name ]);
+            throw new Error("Failed pattern match at Main line 71, column 21 - line 75, column 38: " + [ direction.constructor.name ]);
         })();
         var $53 = isInvalidPoint(state)(cursor$prime);
         if ($53) {
@@ -45251,7 +45245,7 @@ var moveCursor = function (direction) {
             $54.points = points$prime;
             return $54;
         };
-        throw new Error("Failed pattern match at Main line 77, column 7 - line 79, column 56: " + [ $53.constructor.name ]);
+        throw new Error("Failed pattern match at Main line 76, column 7 - line 78, column 56: " + [ $53.constructor.name ]);
     };
 };
 var update = function (v) {
@@ -45272,7 +45266,7 @@ var update = function (v) {
         if (v instanceof NoOp) {
             return state;
         };
-        throw new Error("Failed pattern match at Main line 82, column 1 - line 83, column 29: " + [ v.constructor.name, state.constructor.name ]);
+        throw new Error("Failed pattern match at Main line 81, column 1 - line 82, column 29: " + [ v.constructor.name, state.constructor.name ]);
     };
 };
 var main = function __do() {
@@ -45307,7 +45301,7 @@ module.exports = {
     ordCoords: ordCoords
 };
 
-},{"../CSS":209,"../CSS.Border":184,"../CSS.Color":186,"../CSS.Size":200,"../Color":211,"../Control.Applicative":214,"../Control.Bind":220,"../Control.Monad.Eff":244,"../Control.Monad.Eff.Exception":236,"../DOM":265,"../Data.Array":270,"../Data.Eq":287,"../Data.Foldable":292,"../Data.Function":295,"../Data.Functor":299,"../Data.HeytingAlgebra":303,"../Data.Int":308,"../Data.Monoid":321,"../Data.Ord":328,"../Data.Ordering":329,"../Data.Ring":333,"../Data.Semigroup":335,"../Data.Semiring":337,"../Data.Set":338,"../Data.Show":340,"../Prelude":365,"../Pux":375,"../Pux.CSS":366,"../Pux.Html":373,"../Pux.Html.Attributes":368,"../Pux.Html.Elements":370,"../Pux.Html.Events":372,"../Signal":385,"../Signal.Channel":379,"../Signal.DOM":381}],359:[function(require,module,exports){
+},{"../CSS":209,"../CSS.Border":184,"../CSS.Color":186,"../CSS.Size":200,"../Color":211,"../Control.Applicative":214,"../Control.Bind":220,"../Control.Monad.Eff":244,"../Control.Monad.Eff.Exception":236,"../DOM":265,"../Data.Array":270,"../Data.Eq":287,"../Data.Function":295,"../Data.Functor":299,"../Data.HeytingAlgebra":303,"../Data.Int":308,"../Data.Monoid":321,"../Data.Ord":328,"../Data.Ordering":329,"../Data.Ring":333,"../Data.Semigroup":335,"../Data.Semiring":337,"../Data.Set":338,"../Data.Show":340,"../Prelude":365,"../Pux":375,"../Pux.CSS":366,"../Pux.Html":373,"../Pux.Html.Attributes":368,"../Pux.Html.Elements":370,"../Pux.Html.Events":372,"../Signal":385,"../Signal.Channel":379,"../Signal.DOM":381}],359:[function(require,module,exports){
 "use strict";
 
 // module Math

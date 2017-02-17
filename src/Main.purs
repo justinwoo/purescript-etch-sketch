@@ -8,8 +8,7 @@ import CSS.Size (px)
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Exception (EXCEPTION)
 import DOM (DOM)
-import Data.Array ((:))
-import Data.Foldable (foldl)
+import Data.Array (fromFoldable, (:))
 import Data.Int (toNumber)
 import Data.Monoid (mempty)
 import Data.Set (Set, insert)
@@ -103,8 +102,7 @@ view state =
     pointView' = pointView state.increment
     cursor = pointView' "cursor" state.cursor
     pointView'' = pointView' "pointView"
-    foldPoints b a = (pointView'' a) : b
-    points = foldl foldPoints mempty state.points
+    points = pointView'' <$> fromFoldable state.points
   in
     div
       []
