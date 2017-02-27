@@ -59,15 +59,11 @@ isInvalidPoint state (Coords x y) =
   x < 0 || (state.increment * x) > (state.width - state.increment) ||
   y < 0 || (state.increment * y) > (state.height - state.increment)
 
-insertPoint :: Coords -> Set Coords -> Set Coords
-insertPoint point points =
-  insert point points
-
 moveCursor :: Direction -> State -> State
 moveCursor direction state =
   case state.cursor of
     Coords x y -> do
-      let points' = insertPoint state.cursor state.points
+      let points' = insert state.cursor state.points
       let cursor' = case direction of
             Up -> Coords x (y - 1)
             Down -> Coords x (y + 1)
