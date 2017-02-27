@@ -45171,7 +45171,7 @@ var getKeyDirections = (function () {
             if (!v) {
                 return NoOp.value;
             };
-            throw new Error("Failed pattern match at Main line 131, column 17 - line 131, column 38: " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Main line 130, column 17 - line 130, column 38: " + [ v.constructor.name ]);
         };
     };
     return function __do() {
@@ -45191,11 +45191,11 @@ var ordCoords = new Data_Ord.Ord(function () {
     return eqCoords;
 }, function (x) {
     return function (y) {
-        var $46 = Data_Ord.compare(Data_Ord.ordInt)(x.value0)(y.value0);
-        if ($46 instanceof Data_Ordering.LT) {
+        var $47 = Data_Ord.compare(Data_Ord.ordInt)(x.value0)(y.value0);
+        if ($47 instanceof Data_Ordering.LT) {
             return Data_Ordering.LT.value;
         };
-        if ($46 instanceof Data_Ordering.GT) {
+        if ($47 instanceof Data_Ordering.GT) {
             return Data_Ordering.GT.value;
         };
         return Data_Ord.compare(Data_Ord.ordInt)(x.value1)(y.value1);
@@ -45209,39 +45209,39 @@ var initialState = {
     increment: 10
 };
 var moveCursor = function (direction) {
-    return function (state) {
-        var points$prime = Data_Set.insert(ordCoords)(state.cursor)(state.points);
+    return function (v) {
+        var points$prime = Data_Set.insert(ordCoords)(v.cursor)(v.points);
         var cursor$prime = (function () {
             if (direction instanceof Up) {
-                return new Coords(state.cursor.value0, state.cursor.value1 - 1 | 0);
+                return new Coords(v.cursor.value0, v.cursor.value1 - 1 | 0);
             };
             if (direction instanceof Down) {
-                return new Coords(state.cursor.value0, state.cursor.value1 + 1 | 0);
+                return new Coords(v.cursor.value0, v.cursor.value1 + 1 | 0);
             };
             if (direction instanceof Left) {
-                return new Coords(state.cursor.value0 - 1 | 0, state.cursor.value1);
+                return new Coords(v.cursor.value0 - 1 | 0, v.cursor.value1);
             };
             if (direction instanceof Right) {
-                return new Coords(state.cursor.value0 + 1 | 0, state.cursor.value1);
+                return new Coords(v.cursor.value0 + 1 | 0, v.cursor.value1);
             };
-            throw new Error("Failed pattern match at Main line 67, column 21 - line 71, column 38: " + [ direction.constructor.name ]);
+            throw new Error("Failed pattern match at Main line 69, column 15 - line 73, column 32: " + [ direction.constructor.name ]);
         })();
-        var $53 = isInvalidPoint(state)(cursor$prime);
-        if ($53) {
-            return state;
+        var $55 = isInvalidPoint(v)(cursor$prime);
+        if ($55) {
+            return v;
         };
-        if (!$53) {
-            var $54 = {};
-            for (var $55 in state) {
-                if ({}.hasOwnProperty.call(state, $55)) {
-                    $54[$55] = state[$55];
+        if (!$55) {
+            var $56 = {};
+            for (var $57 in v) {
+                if ({}.hasOwnProperty.call(v, $57)) {
+                    $56[$57] = v[$57];
                 };
             };
-            $54.cursor = cursor$prime;
-            $54.points = points$prime;
-            return $54;
+            $56.cursor = cursor$prime;
+            $56.points = points$prime;
+            return $56;
         };
-        throw new Error("Failed pattern match at Main line 72, column 7 - line 74, column 56: " + [ $53.constructor.name ]);
+        throw new Error("Failed pattern match at Main line 64, column 3 - line 66, column 52: " + [ $55.constructor.name ]);
     };
 };
 var update = function (v) {
@@ -45250,19 +45250,19 @@ var update = function (v) {
             return moveCursor(v.value0)(state);
         };
         if (v instanceof ClearScreen) {
-            var $62 = {};
-            for (var $63 in state) {
-                if ({}.hasOwnProperty.call(state, $63)) {
-                    $62[$63] = state[$63];
+            var $65 = {};
+            for (var $66 in state) {
+                if ({}.hasOwnProperty.call(state, $66)) {
+                    $65[$66] = state[$66];
                 };
             };
-            $62.points = Data_Monoid.mempty(Data_Set.monoidSet(ordCoords));
-            return $62;
+            $65.points = Data_Monoid.mempty(Data_Set.monoidSet(ordCoords));
+            return $65;
         };
         if (v instanceof NoOp) {
             return state;
         };
-        throw new Error("Failed pattern match at Main line 77, column 1 - line 78, column 29: " + [ v.constructor.name, state.constructor.name ]);
+        throw new Error("Failed pattern match at Main line 76, column 1 - line 77, column 29: " + [ v.constructor.name, state.constructor.name ]);
     };
 };
 var main = function __do() {

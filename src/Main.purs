@@ -60,18 +60,17 @@ isInvalidPoint state (Coords x y) =
   y < 0 || (state.increment * y) > (state.height - state.increment)
 
 moveCursor :: Direction -> State -> State
-moveCursor direction state =
-  case state.cursor of
-    Coords x y -> do
-      let points' = insert state.cursor state.points
-      let cursor' = case direction of
-            Up -> Coords x (y - 1)
-            Down -> Coords x (y + 1)
-            Left -> Coords (x - 1) y
-            Right -> Coords (x + 1) y
-      if isInvalidPoint state cursor'
-        then state
-        else state {cursor = cursor', points = points'}
+moveCursor direction state@{cursor: (Coords x y)} =
+  if isInvalidPoint state cursor'
+    then state
+    else state {cursor = cursor', points = points'}
+  where
+    points' = insert state.cursor state.points
+    cursor' = case direction of
+      Up -> Coords x (y - 1)
+      Down -> Coords x (y + 1)
+      Left -> Coords (x - 1) y
+      Right -> Coords (x + 1) y
 
 update :: Action -> State -> State
 update (MoveCursor direction) state =
