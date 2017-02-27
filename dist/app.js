@@ -45152,8 +45152,7 @@ var pointView = function (increment) {
 };
 var view = function (state) {
     var pointView$prime = pointView(state.increment);
-    var pointView$prime$prime = pointView$prime("pointView");
-    var points = Data_Functor.map(Data_Functor.functorArray)(pointView$prime$prime)(Data_Array.fromFoldable(Data_Set.foldableSet)(state.points));
+    var points = Data_Functor.map(Data_Functor.functorArray)(pointView$prime("pointView"))(Data_Array.fromFoldable(Data_Set.foldableSet)(state.points));
     var cursor = pointView$prime("cursor")(state.cursor);
     return Pux_Html_Elements.div([  ])([ Pux_Html_Elements.div([  ])([ Pux_Html_Elements.button([ Pux_Html_Events.onClick(Data_Function["const"](ClearScreen.value)) ])([ Pux_Html_Elements.text("Clear") ]) ]), Pux_Html_Elements.div([  ])([ Pux_Html_Elements.svg([ Pux_CSS.style(CSS_Border.border(CSS_Border.solid)(CSS_Size.px(Data_Int.toNumber(1)))(Color.black)), Pux_Html_Attributes.width(Data_Show.show(Data_Show.showInt)(state.width)), Pux_Html_Attributes.height(Data_Show.show(Data_Show.showInt)(state.height)) ])(Data_Array.cons(cursor)(points)) ]) ]);
 };
@@ -45171,7 +45170,7 @@ var getKeyDirections = (function () {
             if (!v) {
                 return NoOp.value;
             };
-            throw new Error("Failed pattern match at Main line 130, column 17 - line 130, column 38: " + [ v.constructor.name ]);
+            throw new Error("Failed pattern match at Main line 129, column 17 - line 129, column 38: " + [ v.constructor.name ]);
         };
     };
     return function __do() {

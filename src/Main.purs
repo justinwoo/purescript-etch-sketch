@@ -96,8 +96,7 @@ view state =
   let
     pointView' = pointView state.increment
     cursor = pointView' "cursor" state.cursor
-    pointView'' = pointView' "pointView"
-    points = pointView'' <$> fromFoldable state.points
+    points = pointView' "pointView" <$> fromFoldable state.points
   in
     div
       []
