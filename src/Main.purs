@@ -83,7 +83,7 @@ update NoOp state =
 pointView :: Int -> String -> Coords -> Html Action
 pointView increment subkey (Coords x y) =
   rect
-    [ key (subkey <> show x <> "," <> show y)
+    [ key (subkey <> show x <> "x" <> show y <> "y")
     , width (show increment)
     , height (show increment)
     , (HA.x (show $ x * increment))
