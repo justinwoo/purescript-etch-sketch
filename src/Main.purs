@@ -55,9 +55,12 @@ initialState =
   }
 
 isInvalidPoint :: State -> Coords -> Boolean
-isInvalidPoint {increment, width, height} (Coords x y) =
-  x < 0 || x > width / increment - 1 ||
-  y < 0 || y > height / increment - 1
+isInvalidPoint {increment, width, height} (Coords x y)
+  | x < 0 = true
+  | y < 0 = true
+  | x > width / increment - 1 = true
+  | y > height / increment - 1 = true
+  | otherwise = false
 
 moveCursor :: Direction -> State -> State
 moveCursor direction state@{cursor: (Coords x y)} =
