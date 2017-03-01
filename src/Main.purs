@@ -8,7 +8,7 @@ import CSS.Size (px)
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Exception (EXCEPTION)
 import DOM (DOM)
-import Data.Array (fromFoldable, (:))
+import Data.Array (fromFoldable, snoc)
 import Data.Int (toNumber)
 import Data.Monoid (mempty)
 import Data.Set (Set, insert)
@@ -84,13 +84,14 @@ update NoOp state =
   state
 
 pointView :: Int -> String -> Coords -> Html Action
-pointView increment subkey (Coords x y) =
+pointView increment color (Coords x y) =
   rect
-    [ key (subkey <> show x <> "x" <> show y <> "y")
-    , width (show increment)
-    , height (show increment)
-    , (HA.x (show $ x * increment))
-    , (HA.y (show $ y * increment))
+    [ key $ color <> show x <> "x" <> show y <> "y"
+    , width $ show increment
+    , height $ show increment
+    , HA.fill $ color
+    , HA.x $ show (x * increment)
+    , HA.y $ show (y * increment)
     ]
     []
 
@@ -98,8 +99,8 @@ view :: State -> Html Action
 view state =
   let
     pointView' = pointView state.increment
-    cursor = pointView' "cursor" state.cursor
-    points = pointView' "pointView" <$> fromFoldable state.points
+    points = pointView' "black" <$> fromFoldable state.points
+    cursor = pointView' "grey" state.cursor
   in
     div
       []
@@ -112,12 +113,12 @@ view state =
       , div
         []
         [ svg
-          [ style $ do
-            border solid (px (toNumber 1)) black
-          , width (show state.width)
-          , height (show state.height)
+          [ style do
+            border solid (px $ toNumber 1) black
+          , width $ show state.width
+          , height $ show state.height
           ]
-          $ cursor : points
+          $ snoc points cursor
         ]
       ]
 
