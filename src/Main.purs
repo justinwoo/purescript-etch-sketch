@@ -9,9 +9,12 @@ import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Exception (EXCEPTION)
 import DOM (DOM)
 import Data.Array (fromFoldable, snoc)
+import Data.Bifunctor (lmap, rmap)
 import Data.Int (toNumber)
 import Data.Monoid (mempty)
+import Data.Newtype (class Newtype, over)
 import Data.Set (Set, insert)
+import Data.Tuple (Tuple(..))
 import Pux (start, fromSimple, renderToDOM)
 import Pux.CSS (style)
 import Pux.Html (Html, div, text, button, svg, rect)
@@ -28,9 +31,10 @@ data Direction
   | Left
   | Right
 
-data Coords = Coords Int Int
+newtype Coords = Coords (Tuple Int Int)
 derive instance eqCoords :: Eq Coords
 derive instance ordCoords :: Ord Coords
+derive instance newtypeCoords :: Newtype Coords _
 
 data Action
   = MoveCursor Direction
@@ -47,7 +51,7 @@ type State =
 
 initialState :: State
 initialState =
-  { cursor: Coords 0 0
+  { cursor: Coords (Tuple 0 0)
   , points: mempty
   , width: 800
   , height: 600
@@ -55,7 +59,7 @@ initialState =
   }
 
 isInvalidPoint :: State -> Coords -> Boolean
-isInvalidPoint {increment, width, height} (Coords x y)
+isInvalidPoint {increment, width, height} (Coords (Tuple x y))
   | x < 0 = true
   | y < 0 = true
   | x > width / increment - 1 = true
@@ -63,17 +67,18 @@ isInvalidPoint {increment, width, height} (Coords x y)
   | otherwise = false
 
 moveCursor :: Direction -> State -> State
-moveCursor direction state@{cursor: (Coords x y)} =
+moveCursor direction state =
   if isInvalidPoint state cursor'
     then state
     else state {cursor = cursor', points = points'}
   where
     points' = insert state.cursor state.points
-    cursor' = case direction of
-      Up -> Coords x (y - 1)
-      Down -> Coords x (y + 1)
-      Left -> Coords (x - 1) y
-      Right -> Coords (x + 1) y
+    cursor' = over Coords case direction of
+      Up -> rmap (_ - 1)
+      Down -> rmap (_ + 1)
+      Left -> lmap (_ - 1)
+      Right -> lmap (_ + 1)
+      $ state.cursor
 
 update :: Action -> State -> State
 update (MoveCursor direction) state =
@@ -84,7 +89,7 @@ update NoOp state =
   state
 
 pointView :: Int -> String -> Coords -> Html Action
-pointView increment color (Coords x y) =
+pointView increment color (Coords (Tuple x y)) =
   rect
     [ key $ color <> show x <> "x" <> show y <> "y"
     , width $ show increment
