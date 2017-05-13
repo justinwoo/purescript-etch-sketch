@@ -11,8 +11,8 @@
     "output"
   ],
   "dependencies": {
-    "purescript-pux": "^7.0.0",
-    "purescript-pux-css": "^3.1.0",
-    "purescript-sets": "^2.0.1"
+    "purescript-pux": "^9.1.0",
+    "purescript-sets": "^3.0.0",
+    "purescript-css": "^3.0.0"
   }
 }

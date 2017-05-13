@@ -1,6 +1,5 @@
 module Main where
 
-import Pux.Html.Attributes as HA
 import CSS (border)
 import CSS.Border (solid)
 import CSS.Color (black)
@@ -8,18 +7,21 @@ import CSS.Size (px)
 import Control.Monad.Eff (Eff)
 import Control.Monad.Eff.Exception (EXCEPTION)
 import DOM (DOM)
-import Data.Array (fromFoldable, snoc)
-import Data.Int (toNumber)
+import Data.Array (fromFoldable)
+import Data.Foldable (fold)
 import Data.Monoid (mempty)
 import Data.Set (Set, insert)
-import Pux (start, fromSimple, renderToDOM)
-import Pux.CSS (style)
-import Pux.Html (Html, div, text, button, svg, rect)
-import Pux.Html.Attributes (height, key, width)
-import Pux.Html.Events (onClick)
+import Pux (EffModel, start, noEffects)
+import Pux.DOM.Events (onClick)
+import Pux.DOM.HTML (HTML)
+import Pux.DOM.HTML.Attributes (key, style)
+import Pux.Renderer.React (renderToDOM)
 import Signal (Signal)
 import Signal.Channel (CHANNEL)
 import Signal.DOM (keyPressed)
+import Text.Smolder.HTML (button, div)
+import Text.Smolder.HTML.Attributes (height, width)
+import Text.Smolder.Markup (attribute, leaf, parent, text, (!), (#!))
 import Prelude hiding (div)
 
 data Direction
@@ -32,7 +34,7 @@ data Coords = Coords Int Int
 derive instance eqCoords :: Eq Coords
 derive instance ordCoords :: Ord Coords
 
-data Action
+data Event
   = MoveCursor Direction
   | ClearScreen
   | NoOp
@@ -75,73 +77,77 @@ moveCursor direction state@{cursor: (Coords x y)} =
       Left -> Coords (x - 1) y
       Right -> Coords (x + 1) y
 
-update :: Action -> State -> State
-update (MoveCursor direction) state =
-  moveCursor direction state
-update ClearScreen state =
-  state { points = mempty }
-update NoOp state =
-  state
+foldp :: forall eff. Event -> State -> EffModel State Event eff
+foldp (MoveCursor direction) state =
+  noEffects $ moveCursor direction state
+foldp ClearScreen state =
+  noEffects $ state {points = mempty :: Set Coords}
+foldp NoOp state =
+  noEffects $ state
 
-pointView :: Int -> String -> Coords -> Html Action
+pointView :: Int -> String -> Coords -> HTML Event
 pointView increment color (Coords x y) =
-  rect
-    [ key $ color <> show x <> "x" <> show y <> "y"
-    , width $ show increment
-    , height $ show increment
-    , HA.fill $ color
-    , HA.x $ show (x * increment)
-    , HA.y $ show (y * increment)
-    ]
-    []
+  leaf "rect"
+    ! key (show x <> "," <> show y)
+    ! width (show increment)
+    ! height (show increment)
+    ! attribute "fill" color
+    ! attribute "x" (show (x * increment))
+    ! attribute "y" (show (y * increment))
 
-view :: State -> Html Action
+view :: State -> HTML Event
 view state =
-  let
-    pointView' = pointView state.increment
-    points = pointView' "black" <$> fromFoldable state.points
-    cursor = pointView' "grey" state.cursor
-  in
-    div
-      []
-      [ div
-        []
-        [ button
-          [ onClick (const ClearScreen) ]
-          [ text "Clear" ]
-        ]
-      , div
-        []
-        [ svg
-          [ style do
-            border solid (px $ toNumber 1) black
-          , width $ show state.width
-          , height $ show state.height
-          ]
-          $ snoc points cursor
-        ]
-      ]
+  div do
+    div ! key "buttondiv" $ do
+      button
+        #! onClick (const ClearScreen)
+        $ do
+          text "Clear"
+    div ! key "svgdiv" $ do
+      parent "svg"
+        ! style (border solid (px 1.0) black)
+        ! width (show state.width)
+        ! height (show state.height)
+        $ do
+          fold points
+          cursor
+    where
+      pointView' = pointView state.increment
+      points = pointView' "black" <$> fromFoldable state.points
+      cursor = pointView' "grey" state.cursor
 
-getKeyDirections :: forall e. Eff (dom :: DOM | e) (Signal Action)
+getKeyDirections :: forall eff.
+  Eff
+    ( dom :: DOM
+    | eff
+    )
+    (Signal Event)
 getKeyDirections = do
-  ups <- map (actions $ MoveCursor Up) <$> keyPressed 38
-  downs <- map (actions $ MoveCursor Down) <$> keyPressed 40
-  lefts <- map (actions $ MoveCursor Left) <$> keyPressed 37
-  rights <- map (actions $ MoveCursor Right) <$> keyPressed 39
+  ups <- map (event $ MoveCursor Up) <$> keyPressed 38
+  downs <- map (event $ MoveCursor Down) <$> keyPressed 40
+  lefts <- map (event $ MoveCursor Left) <$> keyPressed 37
+  rights <- map (event $ MoveCursor Right) <$> keyPressed 39
   pure $ ups <> downs <> lefts <> rights
   where
-    actions x = if _ then x else NoOp
+    event x = if _ then x else NoOp
 
-main :: forall e. Eff (err :: EXCEPTION, channel :: CHANNEL, dom :: DOM | e) Unit
+main :: forall eff.
+  Eff
+    ( dom :: DOM
+    , channel :: CHANNEL
+    , exception :: EXCEPTION
+    | eff
+    )
+    Unit
 main = do
   keyDirections <- getKeyDirections
   app <- start
     { initialState
-    , update: fromSimple update
+    , foldp
     , view
     , inputs:
       [ keyDirections
       ]
     }
 
-  renderToDOM "#app" app.html
+  renderToDOM "#app" app.markup app.input
